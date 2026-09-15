@@ -1,6 +1,4 @@
 
-
-
 # Distributed Stock Exchange Simulator
 
 Simulador de uma Bolsa de Valores Distribuída desenvolvido como projeto acadêmico da disciplina de **Sistemas Distribuídos**.
@@ -30,6 +28,14 @@ Ao longo do desenvolvimento serão implementados os principais componentes neces
 - Segurança e autorização
 - Observabilidade
 - Testes funcionais, concorrência e carga
+
+---
+
+## 🚀 Executando o Projeto
+
+Consulte o guia completo:
+
+👉 [Como Executar o Projeto](docs/00-getting-started/setup-and-run.md)
 
 ---
 
@@ -137,22 +143,6 @@ Cada issue possui:
 - Artefatos esperados
 - Evidências de conclusão
 
-As issues representam as unidades de trabalho que compõem cada milestone.
-
-### Exemplo de rastreabilidade
-
-```text
-Milestone
-    ↓
-Issue
-    ↓
-Implementação
-    ↓
-Teste
-    ↓
-Validação
-```
-
 ---
 
 # 📊 Project Board
@@ -174,6 +164,9 @@ Review
   ↓
 Done
 ```
+
+<img width="1915" height="442" alt="image" src="https://github.com/user-attachments/assets/a41277c9-024d-43e9-915f-0f7820199b48" />
+
 
 ## Significado das colunas
 
@@ -223,8 +216,12 @@ docs/
 ├── 08-presentation/
 │   └── demo-script.md
 │
-└── 09-delivery/
-    └── delivery-checklist.md
+├── 09-delivery/
+│   └── delivery-checklist.md
+│
+└── 10-trading/
+    ├── order-book.md
+    └── matching-engine.md
 ```
 
 ## Principais áreas
@@ -264,26 +261,6 @@ Materiais utilizados na apresentação.
 ### 09-delivery
 
 Artefatos relacionados à entrega da disciplina.
-
----
-
-# 🏗️ Estrutura do Repositório
-
-```text
-Distributed-Stock-Exchange-Simulator/
-│
-├── backend/
-│
-├── frontend/
-│
-├── tests/
-│
-├── docs/
-│
-├── README.md
-│
-└── .github/
-```
 
 ---
 
@@ -392,3 +369,76 @@ Múltiplos Clientes
 ```
 
 Todo o projeto é desenvolvido de forma incremental utilizando **Milestones, Issues, Project Board, documentação e testes**, garantindo rastreabilidade completa entre planejamento, implementação e validação.
+
+# 📋 Matriz de Rastreabilidade dos Requisitos
+
+Esta matriz estabelece a relação entre os requisitos do sistema, os milestones do projeto, as issues responsáveis pela implementação, os artefatos produzidos e os testes de validação.
+
+| ID | Requisito | Descrição | Milestone | Issue(s) | Artefato(s) | Teste(s) | Status |
+|----|-----------|------------|------------|------------|------------|------------|------------|
+| R1 | Múltiplos clientes | Pelo menos dois investidores devem poder operar simultaneamente | M4 | # | MultiClientManager | multi-client-test.md | ⬜ |
+| R2 | Autenticação | Cada investidor deve possuir uma sessão identificável | M3 | # | AuthService | authentication-test.md | ⬜ |
+| R3 | Envio de ordens | Investidores devem registrar ordens de compra e venda | M4 | # | OrderController | order-flow-test.md | ⬜ |
+| R4 | Home Broker | Investidor deve interagir através de uma interface web | M5 | # | Home Broker Frontend | end-to-end-homebroker.md | ⬜ |
+| R5 | Consulta de saldo e carteira | Investidor deve visualizar saldo disponível e ativos em carteira | M5 | # | PortfolioService | end-to-end-homebroker.md | ⬜ |
+| R6 | Livro de Ofertas | Sistema deve organizar ordens pendentes por ativo | M7 | # | OrderBook | order-book-validation.md | ⬜ |
+| R7 | Matching Engine | Sistema deve executar negociações automaticamente | M8 | # | MatchingEngine | matching-engine-validation.md | ⬜ |
+| R8 | Persistência | Dados devem permanecer disponíveis após reinicialização do sistema | M9 | # | Repository Layer | persistence-test.md | ⬜ |
+| R9 | Atualização em tempo real | Clientes devem receber atualizações do mercado em tempo real | M9 | # | NotificationService | synchronization-test.md | ⬜ |
+| R10 | Eventos simulados | Eventos econômicos devem impactar o comportamento do mercado | M10 | # | MarketEventEngine | event-simulation-test.md | ⬜ |
+| R11 | Recuperação de falhas | Sistema deve recuperar estado após falhas e reconexões | M10 | # | RecoveryService | recovery-test.md | ⬜ |
+| R12 | Segurança | Usuários não devem acessar recursos de outros investidores | M11 | # | SecurityConfig | security-validation.md | ⬜ |
+| R13 | Observabilidade | Operações devem ser registradas através de logs e métricas | M11 | # | LoggingService | observability-test.md | ⬜ |
+| R14 | Testes de carga | Sistema deve ser validado sob múltiplos usuários simultâneos | M11 | # | Load Test Suite | load-test-results.md | ⬜ |
+
+---
+
+## 📊 Legenda de Status
+
+| Status | Significado |
+|----------|----------|
+| ⬜ | Não iniciado |
+| 🟡 | Em desenvolvimento |
+| 🔵 | Em validação |
+| ✅ | Concluído |
+| ❌ | Não atendido |
+
+---
+
+## 🔄 Fluxo de Rastreabilidade
+
+Cada requisito deve possuir rastreabilidade completa ao longo do projeto.
+
+```text
+Requisito
+    ↓
+Milestone
+    ↓
+Issue
+    ↓
+Implementação
+    ↓
+Teste
+    ↓
+Evidência
+    ↓
+Conclusão
+```
+
+### Exemplo
+
+```text
+R6 — Livro de Ofertas
+    ↓
+Milestone 7
+    ↓
+Issues #31 #32 #33 #34 #35
+    ↓
+OrderBook
+    ↓
+order-book.md
+    ↓
+order-book-validation.md
+    ↓
+Conclusão
+```
