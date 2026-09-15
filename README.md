@@ -376,20 +376,21 @@ Esta matriz estabelece a relação entre os requisitos do sistema, os milestones
 
 | ID | Requisito | Descrição | Milestone | Issue(s) | Artefato(s) | Teste(s) | Status |
 |----|-----------|------------|------------|------------|------------|------------|------------|
-| R1 | Múltiplos clientes | Pelo menos dois investidores devem poder operar simultaneamente | M4 | # | MultiClientManager | multi-client-test.md | ⬜ |
-| R2 | Autenticação | Cada investidor deve possuir uma sessão identificável | M3 | # | AuthService | authentication-test.md | ⬜ |
-| R3 | Envio de ordens | Investidores devem registrar ordens de compra e venda | M4 | # | OrderController | order-flow-test.md | ⬜ |
-| R4 | Home Broker | Investidor deve interagir através de uma interface web | M5 | # | Home Broker Frontend | end-to-end-homebroker.md | ⬜ |
-| R5 | Consulta de saldo e carteira | Investidor deve visualizar saldo disponível e ativos em carteira | M5 | # | PortfolioService | end-to-end-homebroker.md | ⬜ |
-| R6 | Livro de Ofertas | Sistema deve organizar ordens pendentes por ativo | M7 | # | OrderBook | order-book-validation.md | ⬜ |
-| R7 | Matching Engine | Sistema deve executar negociações automaticamente | M8 | # | MatchingEngine | matching-engine-validation.md | ⬜ |
-| R8 | Persistência | Dados devem permanecer disponíveis após reinicialização do sistema | M9 | # | Repository Layer | persistence-test.md | ⬜ |
-| R9 | Atualização em tempo real | Clientes devem receber atualizações do mercado em tempo real | M9 | # | NotificationService | synchronization-test.md | ⬜ |
-| R10 | Eventos simulados | Eventos econômicos devem impactar o comportamento do mercado | M10 | # | MarketEventEngine | event-simulation-test.md | ⬜ |
-| R11 | Recuperação de falhas | Sistema deve recuperar estado após falhas e reconexões | M10 | # | RecoveryService | recovery-test.md | ⬜ |
-| R12 | Segurança | Usuários não devem acessar recursos de outros investidores | M11 | # | SecurityConfig | security-validation.md | ⬜ |
-| R13 | Observabilidade | Operações devem ser registradas através de logs e métricas | M11 | # | LoggingService | observability-test.md | ⬜ |
-| R14 | Testes de carga | Sistema deve ser validado sob múltiplos usuários simultâneos | M11 | # | Load Test Suite | load-test-results.md | ⬜ |
+| R1 | Múltiplos clientes | Pelo menos dois investidores devem poder operar simultaneamente. | M4 | #15, #16 | Session, SessionService, SessionController | #18 — TEST-001 | ⬜ |
+| R2 | Autenticação | Cada investidor deve possuir uma sessão identificável. | M3 | #11 | AuthController, AuthService, Session | — | ⬜ |
+| R3 | Home Broker | Investidor deve interagir através de uma interface web. | M5 | #19 | Home Broker Frontend | #23 — TEST-002 | ⬜ |
+| R4 | Consulta de ativos | Investidor deve poder consultar os ativos negociáveis e seus preços. | M3/M5 | #12, #14 | AssetController, AssetService | #23 — TEST-002 | ⬜ |
+| R5 | Envio de ordens | Investidores devem registrar ordens de compra e venda. | M4/M5 | #17, #21 | OrderController, OrderService, Order | #18, #23 | ⬜ |
+| R6 | Livro de Ofertas | Sistema deve organizar ordens pendentes por ativo, mantendo separadas as ofertas de compra e venda. | M7 | #29, #30, #31 | OrderBook, OrderBookService | #32 — TEST-003 | ⬜ |
+| R7 | Matching Engine | Sistema deve identificar e executar automaticamente ordens de compra e venda compatíveis. | M8 | #33, #34, #35, #36, #37 | MatchingEngine, TradeService, Trade, WalletService, PortfolioService | #38 — TEST-004 | ⬜ |
+| R8 | Atualização em tempo real | Clientes conectados devem receber automaticamente as alterações do mercado sem recarregar a interface. | M9 | #41, #42 | NotificationService, mecanismo de atualização em tempo real | #42 — TEST-005 | ⬜ |
+| R9 | Persistência | Dados relevantes do sistema devem permanecer disponíveis após a reinicialização da aplicação. | M9 | #39, #40 | Repositories, entidades persistentes, banco de dados | Testes de persistência | ⬜ |
+| R10 | Eventos simulados | O sistema deve suportar agentes automatizados e eventos econômicos capazes de alterar o comportamento do mercado. | M10 | #43, #44, #45 | Agentes automatizados, estratégias e mecanismo de eventos | Cenários de agentes/eventos | ⬜ |
+| R11 | Recuperação de falhas | O sistema deve detectar desconexões, permitir reconexão e recuperar o estado do investidor. | M10/M11 | #46, #47, #52 | Session/Recovery, mecanismos de reconexão e recuperação | #52 — FAULT-002 | ⬜ |
+| R12 | Testes de carga | Sistema deve ser validado sob múltiplos usuários/agentes simultâneos. | M11 | #50, #51 | Suíte de testes funcionais, concorrência e carga | #50, #51 | ⬜ |
+| R13 | Observabilidade | Operações do sistema devem ser rastreáveis através de logs estruturados por ordem. | M11 | #49 | Logging/Correlation | Validação de logs | ⬜ |
+| R14 | Segurança | Usuários não devem acessar ou alterar recursos pertencentes a outros investidores. | M11 | #48 | Validações de autorização | Validação de segurança | ⬜ |
+| R15 | Contêineres | Os componentes necessários à execução do sistema devem ser disponibilizados em contêineres. | M3 | #9 | Dockerfile, Docker Compose, configuração de containers | Teste de inicialização dos containers | ⬜ |
 
 ---
 
