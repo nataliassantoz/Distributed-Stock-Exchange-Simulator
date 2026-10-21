@@ -127,10 +127,11 @@ class AutenticacaoTest {
 
     private void assertErro(HttpResponse<String> response, int status, String detail) {
         assertEquals(status, response.statusCode());
-        assertTrue(response.headers().firstValue("Content-Type").orElse("").contains("application/problem+json"));
-        var body = dados(response);
-        assertEquals(status, body.get("status").asInt());
-        assertEquals(detail, body.get("detail").asString());
+        assertTrue(response.headers().firstValue("Content-Type").orElse("").contains("application/json"));
+        var body = json.readTree(response.body());
+        assertEquals(status, body.get("cdRetorno").asInt());
+        assertEquals(detail, body.get("msgUsuario").asString());
+        assertTrue(body.get("msgTecnica").isNull());
         assertFalse(body.has("trace"));
         assertFalse(body.has("exception"));
         assertFalse(response.body().contains("org.springframework"));
@@ -142,7 +143,12 @@ class AutenticacaoTest {
     }
 
     private JsonNode dados(HttpResponse<String> response) {
-        return json.readTree(response.body());
+        var body = json.readTree(response.body());
+        assertEquals(response.statusCode(), body.get("cdRetorno").asInt());
+        assertTrue(body.has("msgUsuario"));
+        assertTrue(body.has("msgTecnica"));
+        assertTrue(body.has("dados"));
+        return body.get("dados");
     }
 
     private HttpResponse<String> enviar(HttpClient client, String method, String path,

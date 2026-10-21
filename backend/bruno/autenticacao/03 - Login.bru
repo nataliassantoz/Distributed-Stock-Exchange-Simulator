@@ -24,15 +24,15 @@ body:json {
 
 script:post-response {
   if (res.getStatus() === 200) {
-    bru.setVar("idSessao", res.getBody().idSessao);
+    bru.setVar("idSessao", res.getBody().dados.idSessao);
   }
 }
 
 tests {
   test("Sessao criada para o usuario cadastrado", function () {
     expect(res.getStatus()).to.equal(200);
-    expect(res.getBody().idSessao).to.be.a("string").and.not.empty;
-    expect(res.getBody().usuario.id).to.equal(bru.getVar("usuarioId"));
-    expect(res.getBody().usuario).to.not.have.property("senhaHash");
+    expect(res.getBody().dados.idSessao).to.be.a("string").and.not.empty;
+    expect(res.getBody().dados.usuario.id).to.equal(bru.getVar("usuarioId"));
+    expect(res.getBody().dados.usuario).to.not.have.property("senhaHash");
   });
 }

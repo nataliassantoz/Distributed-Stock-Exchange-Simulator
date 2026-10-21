@@ -28,3 +28,8 @@ bru run --env Local
 ```
 
 Os scripts usam as [APIs de scripting do Bruno](https://github.com/usebruno/bruno-docs/blob/main/testing/script/javascript-reference.mdx).
+
+As respostas da API usam o envelope `cdRetorno`, `msgTecnica`, `msgUsuario` e `dados`.
+Os campos do resultado ficam em `dados`, incluindo `dados.token` no CSRF,
+`dados.idSessao` no login e `dados.erros` em erros de validação.
+A consulta `GET /api/ativos?nome=petro&codigo=4` retorna a lista em `dados`.

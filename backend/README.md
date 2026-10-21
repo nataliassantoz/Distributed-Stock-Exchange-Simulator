@@ -115,7 +115,7 @@ Exemplo com curl e jq (API em execução):
 ```bash
 # Preserve o cookie e envie o token nos POSTs.
 curl -s -c /tmp/stock-cookies http://localhost:8080/api/auth/csrf > /tmp/stock-csrf.json
-AUTH_CSRF=$(jq -r .token /tmp/stock-csrf.json)
+AUTH_CSRF=$(jq -r .dados.token /tmp/stock-csrf.json)
 curl -i -b /tmp/stock-cookies -c /tmp/stock-cookies \
   -H 'Content-Type: application/json' -H "X-CSRF-TOKEN: $AUTH_CSRF" \
   -d '{"nome":"Maria Silva","email":"maria@example.com","senha":"Senha123!"}' \
@@ -127,7 +127,7 @@ curl -i -b /tmp/stock-cookies -c /tmp/stock-cookies \
 curl -i -b /tmp/stock-cookies http://localhost:8080/api/auth/me
 ```
 
-Resposta de login: `{"idSessao":"...","usuario":{"id":1,"nome":"Maria Silva","email":"maria@example.com"}}`.
+Resposta de login: `{"cdRetorno":200,"msgTecnica":null,"msgUsuario":"Operação realizada com sucesso","dados":{"idSessao":"...","usuario":{"id":1,"nome":"Maria Silva","email":"maria@example.com"}}}`.
 O transporte da sessão nas próximas chamadas é o cookie `JSESSIONID`. O ID retornado
 no JSON identifica essa mesma sessão. O usuário autenticado fica disponível no
 `Authentication` do Spring Security, com `getName()` contendo o ID do usuário.
@@ -144,20 +144,24 @@ Abra a pasta como collection, selecione **Local** e execute as requisições em 
 
 ## Respostas de erro
 
-O tratamento global retorna `application/problem+json`, com `status`, `title` e
-`detail`, sem stack trace nem nomes de classes internas. Por exemplo:
+Os endpoints da API retornam `application/json` com o envelope `ApiResult<T>`:
+`cdRetorno` corresponde ao status HTTP, `msgUsuario` contém a mensagem da operação,
+`msgTecnica` fica nula nas respostas atuais e `dados` contém o resultado.
+O service de ativos usa `ApiResultUtil<List<AtivoDTO.Response.Ativo>>`.
+
+O tratamento global usa o mesmo envelope para erros, sem stack trace nem nomes
+de classes internas. Por exemplo:
 
 ```json
 {
-  "type": "about:blank",
-  "title": "Conflict",
-  "status": 409,
-  "detail": "Email já cadastrado",
-  "instance": "/api/auth/cadastro"
+  "cdRetorno": 409,
+  "msgTecnica": null,
+  "msgUsuario": "Email já cadastrado",
+  "dados": null
 }
 ```
 
-Erros de validação incluem `erros`, com as mensagens por campo, sem repetir os
+Erros de validação incluem `dados.erros`, com as mensagens por campo, sem repetir os
 valores enviados. Erros inesperados retornam 500 com mensagem genérica e são
 registrados nos logs do servidor. Falhas de autenticação e acesso nos filtros do
 Spring Security também usam o tratamento global.

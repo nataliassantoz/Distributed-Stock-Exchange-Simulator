@@ -25,16 +25,16 @@ body:json {
 
 script:post-response {
   if (res.getStatus() === 201) {
-    bru.setVar("usuarioId", res.getBody().id);
+    bru.setVar("usuarioId", res.getBody().dados.id);
   }
 }
 
 tests {
   test("Usuario criado com identificador unico", function () {
     expect(res.getStatus()).to.equal(201);
-    expect(res.getBody().id).to.be.a("number").and.above(0);
-    expect(res.getBody().email).to.equal(bru.getVar("email"));
-    expect(res.getBody()).to.not.have.property("senha");
-    expect(res.getBody()).to.not.have.property("senhaHash");
+    expect(res.getBody().dados.id).to.be.a("number").and.above(0);
+    expect(res.getBody().dados.email).to.equal(bru.getVar("email"));
+    expect(res.getBody().dados).to.not.have.property("senha");
+    expect(res.getBody().dados).to.not.have.property("senhaHash");
   });
 }

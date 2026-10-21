@@ -2,6 +2,9 @@ package br.com.nataliasantos.distributedstockexchangesimulator.api.controller;
 
 import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.UsuarioDTO;
 import br.com.nataliasantos.distributedstockexchangesimulator.domain.service.autenticacao.AutenticacaoService;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.ApiResult;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.utils.ApiResultUtil;
+import org.springframework.http.ResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -26,17 +29,22 @@ public class AutenticacaoController {
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository contextRepository;
 
+    private final ApiResultUtil<CsrfToken> csrfResult;
+    private final ApiResultUtil<UsuarioDTO.Response.Usuario> usuarioResult;
+    private final ApiResultUtil<UsuarioDTO.Response.Sessao> sessaoResult;
+
     @GetMapping("/csrf")
-    public CsrfToken csrf(CsrfToken token) { return token; }
+    public ResponseEntity<ApiResult<CsrfToken>> csrf(CsrfToken token) {
+        return csrfResult.resultSucesso(HttpStatus.OK, token);
+    }
 
     @PostMapping("/cadastro")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioDTO.Response.Usuario cadastrar(@Valid @RequestBody UsuarioDTO.Request.Cadastro request) {
-        return service.cadastrar(request);
+    public ResponseEntity<ApiResult<UsuarioDTO.Response.Usuario>> cadastrar(@Valid @RequestBody UsuarioDTO.Request.Cadastro request) {
+        return usuarioResult.resultSucesso(HttpStatus.CREATED, service.cadastrar(request));
     }
 
     @PostMapping("/login")
-    public UsuarioDTO.Response.Sessao login(@Valid @RequestBody UsuarioDTO.Request.Login credentials,
+    public ResponseEntity<ApiResult<UsuarioDTO.Response.Sessao>> login(@Valid @RequestBody UsuarioDTO.Request.Login credentials,
                                           HttpServletRequest request, HttpServletResponse response) {
         final Authentication authentication;
         try {
@@ -51,12 +59,12 @@ public class AutenticacaoController {
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
         contextRepository.saveContext(context, request, response);
-        return new UsuarioDTO.Response.Sessao(request.getSession().getId(),
-                service.identificar(Long.valueOf(authentication.getName())));
+        return sessaoResult.resultSucesso(HttpStatus.OK, new UsuarioDTO.Response.Sessao(request.getSession().getId(),
+                service.identificar(Long.valueOf(authentication.getName()))));
     }
 
     @GetMapping("/me")
-    public UsuarioDTO.Response.Usuario identificar(Authentication authentication) {
-        return service.identificar(Long.valueOf(authentication.getName()));
+    public ResponseEntity<ApiResult<UsuarioDTO.Response.Usuario>> identificar(Authentication authentication) {
+        return usuarioResult.resultSucesso(HttpStatus.OK, service.identificar(Long.valueOf(authentication.getName())));
     }
 }
