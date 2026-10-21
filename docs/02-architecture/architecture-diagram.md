@@ -87,7 +87,7 @@ flowchart TD
 - **Infraestrutura prevista:** Docker e Docker Compose.
 - **Documentação da API:** OpenAPI 3 / Swagger UI.
 
-A implementação e a topologia de implantação podem evoluir, desde que respeitem as decisões arquiteturais documentadas. O documento de decisões prevê Java 21, enquanto o `backend/pom.xml` consultado configura Java 17; essa divergência deve ser resolvida separadamente.
+A implementação e a topologia de implantação podem evoluir, desde que respeitem as decisões arquiteturais documentadas. O backend utiliza Java 21, conforme o documento de decisões tecnológicas.
 
 ## 6. Referências
 
