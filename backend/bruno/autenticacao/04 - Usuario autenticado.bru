@@ -1,0 +1,19 @@
+meta {
+  name: Usuario autenticado
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/auth/me
+  body: none
+  auth: none
+}
+
+tests {
+  test("Cookie identifica o mesmo usuario", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().id).to.equal(bru.getVar("usuarioId"));
+    expect(res.getBody().email).to.equal(bru.getVar("email"));
+  });
+}
