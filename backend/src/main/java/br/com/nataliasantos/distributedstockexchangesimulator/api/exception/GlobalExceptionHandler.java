@@ -1,5 +1,8 @@
 package br.com.nataliasantos.distributedstockexchangesimulator.api.exception;
 
+import br.com.nataliasantos.distributedstockexchangesimulator.api.utils.ApiResultUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +22,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.LinkedHashMap;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private final ApiResultUtil<Object> resultUtil;
     private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @Override
@@ -60,5 +66,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "Ocorreu um erro interno. Tente novamente mais tarde.");
         problem.setTitle("Erro interno");
         return handleExceptionInternal(exception, problem, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> createResponseEntity(Object body, HttpHeaders headers,
+            HttpStatusCode status, WebRequest request) {
+        var problem = body instanceof ProblemDetail detail ? detail : ProblemDetail.forStatus(status);
+        var result = resultUtil.resultErro(HttpStatus.valueOf(status.value()), null,
+                problem.getDetail(), problem.getProperties());
+        var responseHeaders = new HttpHeaders();
+        responseHeaders.putAll(headers);
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(result.getBody(), responseHeaders, status);
     }
 }

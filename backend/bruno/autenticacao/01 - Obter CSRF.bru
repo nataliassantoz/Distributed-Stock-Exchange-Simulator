@@ -16,14 +16,14 @@ script:pre-request {
 
 script:post-response {
   if (res.getStatus() === 200) {
-    bru.setVar("csrfToken", res.getBody().token);
+    bru.setVar("csrfToken", res.getBody().dados.token);
   }
 }
 
 tests {
   test("Token CSRF retornado", function () {
     expect(res.getStatus()).to.equal(200);
-    expect(res.getBody().token).to.be.a("string").and.not.empty;
-    expect(res.getBody().headerName).to.equal("X-CSRF-TOKEN");
+    expect(res.getBody().dados.token).to.be.a("string").and.not.empty;
+    expect(res.getBody().dados.headerName).to.equal("X-CSRF-TOKEN");
   });
 }

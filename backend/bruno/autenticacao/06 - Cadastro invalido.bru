@@ -26,8 +26,8 @@ body:json {
 tests {
   test("Dados invalidos retornam 400", function () {
     expect(res.getStatus()).to.equal(400);
-    expect(res.getBody().erros).to.have.property("nome");
-    expect(res.getBody().erros).to.have.property("email");
-    expect(res.getBody().erros).to.have.property("senha");
+    expect(res.getBody().dados.erros).to.have.property("nome");
+    expect(res.getBody().dados.erros).to.have.property("email");
+    expect(res.getBody().dados.erros).to.have.property("senha");
   });
 }
