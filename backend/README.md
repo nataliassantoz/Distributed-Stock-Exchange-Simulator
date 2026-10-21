@@ -40,8 +40,8 @@ O health check inclui a disponibilidade do datasource. Somente o endpoint health
 é exposto, sem detalhes internos. Capture a resposta no navegador para a evidência
 solicitada pela issue #9.
 
-O Flyway inicializa o histórico no banco. Ainda não existem entidades nem migrations
-de negócio; os próximos scripts devem ser criados em `src/main/resources/db/migration`.
+O Flyway aplica a migration inicial com usuários, carteiras e ativos em
+`src/main/resources/db/migration`.
 O Hibernate apenas valida o modelo (`ddl-auto: validate`).
 
 O build padrão não exige PostgreSQL nem credenciais locais:
@@ -50,8 +50,9 @@ O build padrão não exige PostgreSQL nem credenciais locais:
 ./mvnw clean install
 ```
 
-Ainda não há testes unitários nesta fundação. Os dois testes existentes são de
-integração e executam somente com o perfil Maven `integration`, pelo Failsafe.
+Os testes de autenticação executam no build padrão com H2, migrations reais e servidor
+HTTP local, sem exigir PostgreSQL. Os testes de infraestrutura PostgreSQL executam
+somente com o perfil Maven `integration`, pelo Failsafe.
 Para validar inicialização, conexão real ao PostgreSQL, histórico do Flyway e HTTP:
 
 ```bash
@@ -74,7 +75,7 @@ volume foi inicializado. Alterar `.env` não altera a senha de um banco já exis
 ## Estrutura e escopo
 
 Os pacotes `api`, `core` e `domain` estão preservados com `package-info.java`.
-As pastas reservadas ainda não contêm funcionalidades de negócio.
+A autenticação usa as camadas de controller, DTO, serviço e repositório.
 O Compose desta etapa executa o PostgreSQL; a aplicação roda via Maven/Java.
 Para executar também a API em contêiner (sem iniciar via Maven):
 
@@ -89,3 +90,74 @@ O Dockerfile compila com Java 21 e executa o JAR em um JRE 21 com usuário sem p
 O banco precisa estar saudável antes de a API iniciar. Valide a prontidão da API
 consultando `/actuator/health`; o Compose não define healthcheck para a API.
 Para parar os dois serviços: `docker compose --profile app stop`.
+
+## Autenticação de usuários
+
+Os DTOs seguem o contêiner `UsuarioDTO`, com interfaces de validação e classes
+`Request.Cadastro`, `Request.Login`, `Response.Usuario` e `Response.Sessao`.
+
+| Método | Endpoint | Resultado |
+| --- | --- | --- |
+| GET | `/api/auth/csrf` | Token CSRF e cookie inicial |
+| POST | `/api/auth/cadastro` | 201, usuário com ID único e carteira criada |
+| POST | `/api/auth/login` | 200, `idSessao` e `usuario`; renova cookie JSESSIONID |
+| GET | `/api/auth/me` | 200, usuário autenticado; 401 sem sessão válida |
+
+Cadastro recebe `{"nome":"Maria Silva","email":"maria@example.com","senha":"Senha123!"}`.
+Login recebe `{"email":"maria@example.com","senha":"Senha123!"}`.
+O email é normalizado para minúsculas; duplicidade retorna 409. Dados inválidos
+retornam 400, credenciais incorretas retornam 401 e ausência de CSRF nos POSTs retorna 403.
+As senhas usam BCrypt e nunca são incluídas nas respostas. O cadastro cria usuários
+`HUMANO` com saldo zero; o cliente não escolhe o tipo nem o saldo.
+
+Exemplo com curl e jq (API em execução):
+
+```bash
+# Preserve o cookie e envie o token nos POSTs.
+curl -s -c /tmp/stock-cookies http://localhost:8080/api/auth/csrf > /tmp/stock-csrf.json
+AUTH_CSRF=$(jq -r .token /tmp/stock-csrf.json)
+curl -i -b /tmp/stock-cookies -c /tmp/stock-cookies \
+  -H 'Content-Type: application/json' -H "X-CSRF-TOKEN: $AUTH_CSRF" \
+  -d '{"nome":"Maria Silva","email":"maria@example.com","senha":"Senha123!"}' \
+  http://localhost:8080/api/auth/cadastro
+curl -i -b /tmp/stock-cookies -c /tmp/stock-cookies \
+  -H 'Content-Type: application/json' -H "X-CSRF-TOKEN: $AUTH_CSRF" \
+  -d '{"email":"maria@example.com","senha":"Senha123!"}' \
+  http://localhost:8080/api/auth/login
+curl -i -b /tmp/stock-cookies http://localhost:8080/api/auth/me
+```
+
+Resposta de login: `{"idSessao":"...","usuario":{"id":1,"nome":"Maria Silva","email":"maria@example.com"}}`.
+O transporte da sessão nas próximas chamadas é o cookie `JSESSIONID`. O ID retornado
+no JSON identifica essa mesma sessão. O usuário autenticado fica disponível no
+`Authentication` do Spring Security, com `getName()` contendo o ID do usuário.
+Novos endpoints exigem autenticação por padrão.
+
+A sessão expira após 30 minutos de inatividade e fica na memória da instância:
+reiniciar a aplicação encerra as sessões; múltiplas instâncias exigirão um repositório
+compartilhado. O cookie usa HttpOnly e SameSite=Strict. Em HTTPS, configure
+`SESSION_COOKIE_SECURE=true`. Senhas aceitam de 8 a 72 caracteres, limitadas também
+a 72 bytes UTF-8 pelo BCrypt.
+
+A collection para testar este fluxo no Bruno está em [`bruno/`](bruno/README.md).
+Abra a pasta como collection, selecione **Local** e execute as requisições em ordem.
+
+## Respostas de erro
+
+O tratamento global retorna `application/problem+json`, com `status`, `title` e
+`detail`, sem stack trace nem nomes de classes internas. Por exemplo:
+
+```json
+{
+  "type": "about:blank",
+  "title": "Conflict",
+  "status": 409,
+  "detail": "Email já cadastrado",
+  "instance": "/api/auth/cadastro"
+}
+```
+
+Erros de validação incluem `erros`, com as mensagens por campo, sem repetir os
+valores enviados. Erros inesperados retornam 500 com mensagem genérica e são
+registrados nos logs do servidor. Falhas de autenticação e acesso nos filtros do
+Spring Security também usam o tratamento global.

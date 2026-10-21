@@ -1,0 +1,29 @@
+meta {
+  name: Obter CSRF
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/auth/csrf
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("email", "maria." + Date.now() + "." + Math.random().toString(36).slice(2) + "@example.com");
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setVar("csrfToken", res.getBody().token);
+  }
+}
+
+tests {
+  test("Token CSRF retornado", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().token).to.be.a("string").and.not.empty;
+    expect(res.getBody().headerName).to.equal("X-CSRF-TOKEN");
+  });
+}
