@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: stock-exchange-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: stock_exchange
+      POSTGRES_USER: stock_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    ports:
+      - "127.0.0.1:5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stock_user -d stock_exchange"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    profiles: ["app"]
+    build: .
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/stock_exchange
+      DB_USER: stock_user
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:${APP_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
