@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Stock Exchange - Autenticacao",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

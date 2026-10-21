@@ -35,7 +35,7 @@ Ao longo do desenvolvimento serão implementados os principais componentes neces
 
 Consulte o guia completo:
 
-👉 [Como Executar o Projeto](docs/00-getting-started/setup-and-run.md)
+👉 [Como Executar o Projeto](backend/README.md)
 
 ---
 
