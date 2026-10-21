@@ -294,12 +294,12 @@ Esse fluxo garante rastreabilidade completa entre os requisitos do projeto e os 
 
 | Milestone | Status |
 |------------|----------|
-| Semana 1 — Planejamento e Arquitetura | 🟡 Em andamento |
-| Semana 2 — Arquitetura e Modelagem de Dados | ⚪ Não iniciada |
-| Semana 3 — Fundação do Backend | ⚪ Não iniciada |
-| Semana 4 — Conexão Múltipla e Ordens Básicas | ⚪ Não iniciada |
-| Semana 5 — Home Broker Simples | ⚪ Não iniciada |
-| Semana 6 — Consolidação da Primeira Entrega | ⚪ Não iniciada |
+| Semana 1 — Planejamento e Arquitetura | ✅ Concluído |
+| Semana 2 — Arquitetura e Modelagem de Dados | ✅ Concluído  |
+| Semana 3 — Fundação do Backend | ✅ Concluído |
+| Semana 4 — Conexão Múltipla e Ordens Básicas | 🟡 Em desenvolvimento |
+| Semana 5 — Home Broker Simples | 🟡 Em desenvolvimento |
+| Semana 6 — Consolidação da Primeira Entrega | 🟡 Em desenvolvimento |
 | Semana 7 — Livro de Ofertas | ⚪ Não iniciada |
 | Semana 8 — Matching Engine e Negociações | ⚪ Não iniciada |
 | Semana 9 — Persistência e Tempo Real | ⚪ Não iniciada |
