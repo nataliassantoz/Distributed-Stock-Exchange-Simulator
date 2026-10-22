@@ -40,7 +40,7 @@ As tecnologias foram selecionadas considerando:
 | Banco de Dados | PostgreSQL |
 | ORM | Spring Data JPA + Hibernate |
 | Migrações | Flyway |
-| Frontend | React |
+| Frontend | Vue |
 | Comunicação REST | Spring Web (REST API) |
 | Comunicação Tempo Real | WebSocket |
 | Containerização | Docker |
@@ -55,7 +55,7 @@ As tecnologias foram selecionadas considerando:
 
 ```text
 ┌──────────────────────────┐
-│        React UI          │
+│          Vue UI          │
 │       Home Broker        │
 └────────────┬─────────────┘
              │
