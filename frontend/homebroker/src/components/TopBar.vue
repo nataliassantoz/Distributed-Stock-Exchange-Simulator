@@ -16,8 +16,16 @@ const handleScroll = () => {
   isScrolled.value = window.scrollY > 20
 }
 
-const scrollTo = (href) => {
+const scrollTo = async (href) => {
   isMobileMenuOpen.value = false
+  if (router.currentRoute.value.path !== '/') {
+    await router.push('/')
+    setTimeout(() => {
+      const el = document.querySelector(href)
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
+    return
+  }
   const el = document.querySelector(href)
   if (el) {
     el.scrollIntoView({ behavior: 'smooth' })
@@ -26,6 +34,20 @@ const scrollTo = (href) => {
 
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+const goToLogin = () => {
+  isMobileMenuOpen.value = false
+  router.push('/login')
+}
+
+const goToHome = () => {
+  isMobileMenuOpen.value = false
+  if (router.currentRoute.value.path !== '/') {
+    router.push('/')
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 }
 
 onMounted(() => {
@@ -45,7 +67,7 @@ onUnmounted(() => {
   >
     <div class="topbar__container">
       <!-- Logo -->
-      <a href="#hero" class="topbar__logo" @click.prevent="scrollTo('#hero')">
+      <a href="/" class="topbar__logo" @click.prevent="goToHome">
         <div class="topbar__logo-icon">
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="2" y="16" width="4" height="10" rx="1" fill="currentColor" opacity="0.5"/>
@@ -74,7 +96,7 @@ onUnmounted(() => {
 
       <!-- CTA Button -->
       <div class="topbar__actions">
-        <button id="btn-entrar" class="topbar__cta">
+        <button id="btn-entrar" class="topbar__cta" @click="goToLogin">
           Entrar
         </button>
       </div>
@@ -107,7 +129,9 @@ onUnmounted(() => {
               </a>
             </li>
             <li>
-              <button class="topbar__cta topbar__cta--mobile">Entrar</button>
+              <button class="topbar__cta topbar__cta--mobile" @click="goToLogin">
+                Entrar
+              </button>
             </li>
           </ul>
         </nav>
