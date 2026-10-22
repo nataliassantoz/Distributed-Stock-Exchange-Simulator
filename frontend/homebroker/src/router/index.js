@@ -32,6 +32,12 @@ const routes = [
     component: () => import('@/views/MercadoView.vue'),
     meta: { title: 'Mercado — Home Broker', requiresAuth: true },
   },
+  {
+    path: '/carteira',
+    name: 'carteira',
+    component: () => import('@/views/CarteiraView.vue'),
+    meta: { title: 'Minha Carteira — Home Broker', requiresAuth: true },
+  },
 ]
 
 const router = createRouter({
