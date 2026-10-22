@@ -1,0 +1,25 @@
+meta {
+  name: Listar sessoes
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/sessoes
+  body: none
+  auth: none
+}
+
+tests {
+  test("Lista contem apenas sessoes do proprio investidor", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().cdRetorno).to.equal(200);
+    const sessoes = res.getBody().dados;
+    expect(sessoes).to.be.an("array").and.not.empty;
+    expect(sessoes.some(sessao => sessao.idSessao === bru.getVar("sessionId"))).to.equal(true);
+    sessoes.forEach(sessao => {
+      expect(sessao.idUsuario).to.equal(bru.getVar("sessionUsuarioId"));
+      expect(sessao.status).to.equal("ATIVA");
+    });
+  });
+}

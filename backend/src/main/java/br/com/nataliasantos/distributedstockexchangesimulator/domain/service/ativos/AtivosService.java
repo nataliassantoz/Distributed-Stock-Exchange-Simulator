@@ -1,7 +1,7 @@
 package br.com.nataliasantos.distributedstockexchangesimulator.domain.service.ativos;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.AtivoDTO;
-import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.ApiResult;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.ativo.AtivoDTO;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.utils.ApiResult;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

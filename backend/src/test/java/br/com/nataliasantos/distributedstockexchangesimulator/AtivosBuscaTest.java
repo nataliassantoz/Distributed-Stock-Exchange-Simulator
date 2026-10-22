@@ -1,7 +1,7 @@
 package br.com.nataliasantos.distributedstockexchangesimulator;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.Ativo;
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.AtivoRepository;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.ativo.Ativo;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.ativo.AtivoRepository;
 import br.com.nataliasantos.distributedstockexchangesimulator.domain.service.ativos.AtivosService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

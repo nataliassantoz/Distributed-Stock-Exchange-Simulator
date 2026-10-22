@@ -1,0 +1,26 @@
+meta {
+  name: Obter CSRF para logout
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/auth/csrf
+  body: none
+  auth: none
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setVar("sessionCsrfToken", res.getBody().dados.token);
+  }
+}
+
+tests {
+  test("Token CSRF retornado", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().cdRetorno).to.equal(200);
+    expect(res.getBody().dados.token).to.be.a("string").and.not.empty;
+    expect(res.getBody().dados.headerName).to.equal("X-CSRF-TOKEN");
+  });
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Consultar apos logout
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/sessoes/atual
+  body: none
+  auth: none
+}
+
+tests {
+  test("Acesso sem sessao valida retorna 401", function () {
+    expect(res.getStatus()).to.equal(401);
+    expect(res.getBody().cdRetorno).to.equal(401);
+    expect(res.getBody().dados).to.equal(null);
+  });
+}

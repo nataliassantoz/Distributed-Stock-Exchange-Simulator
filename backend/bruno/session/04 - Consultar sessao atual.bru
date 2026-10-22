@@ -1,0 +1,24 @@
+meta {
+  name: Consultar sessao atual
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/sessoes/atual
+  body: none
+  auth: none
+}
+
+tests {
+  test("Sessao atual pertence ao investidor autenticado", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().cdRetorno).to.equal(200);
+    const sessao = res.getBody().dados;
+    expect(sessao.idSessao).to.equal(bru.getVar("sessionId"));
+    expect(sessao.idUsuario).to.equal(bru.getVar("sessionUsuarioId"));
+    expect(sessao.status).to.equal("ATIVA");
+    expect(sessao.dataHoraConexao).to.be.a("string").and.not.empty;
+    expect(Number.isNaN(Date.parse(sessao.dataHoraConexao))).to.equal(false);
+  });
+}

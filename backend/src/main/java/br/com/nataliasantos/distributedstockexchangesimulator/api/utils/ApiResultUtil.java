@@ -1,6 +1,5 @@
 package br.com.nataliasantos.distributedstockexchangesimulator.api.utils;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.ApiResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

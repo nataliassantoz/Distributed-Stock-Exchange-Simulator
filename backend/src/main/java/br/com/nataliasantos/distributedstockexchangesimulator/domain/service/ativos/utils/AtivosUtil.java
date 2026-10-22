@@ -1,7 +1,7 @@
 package br.com.nataliasantos.distributedstockexchangesimulator.domain.service.ativos.utils;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.AtivoDTO;
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.Ativo;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.ativo.AtivoDTO;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.ativo.Ativo;
 
 public final class AtivosUtil {
     private AtivosUtil() {}

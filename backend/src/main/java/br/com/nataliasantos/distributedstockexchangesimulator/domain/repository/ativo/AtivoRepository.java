@@ -1,6 +1,6 @@
-package br.com.nataliasantos.distributedstockexchangesimulator.domain.repository;
+package br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.ativo;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.Ativo;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.ativo.Ativo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,6 +1,6 @@
-package br.com.nataliasantos.distributedstockexchangesimulator.domain.repository;
+package br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.usuario;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.Usuario;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.usuario.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

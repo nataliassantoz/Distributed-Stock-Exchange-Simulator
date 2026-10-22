@@ -1,6 +1,8 @@
 package br.com.nataliasantos.distributedstockexchangesimulator.core.configuration;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.UsuarioRepository;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.usuario.UsuarioRepository;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.utils.ApiResultUtil;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.utils.HttpResponseUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,13 +45,18 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityContextRepository repository,
-            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) throws Exception {
+            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver,
+            ApiResultUtil<Void> result, HttpResponseUtil responseUtil) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/cadastro", "/api/auth/login", "/api/auth/csrf", "/actuator/health", "/error").permitAll()
                         .anyRequest().authenticated())
                 .securityContext(context -> context.securityContextRepository(repository))
                 .requestCache(cache -> cache.disable())
+                .logout(logout -> logout.logoutUrl("/api/auth/logout")
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessHandler((request, response, authentication) ->
+                                responseUtil.escrever(response, result.resultSucesso(HttpStatus.OK))))
                 .exceptionHandling(errors -> errors
                         .authenticationEntryPoint((request, response, exception) -> resolver.resolveException(request, response, null,
                                 new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Autenticação necessária. Faça login para continuar.")))

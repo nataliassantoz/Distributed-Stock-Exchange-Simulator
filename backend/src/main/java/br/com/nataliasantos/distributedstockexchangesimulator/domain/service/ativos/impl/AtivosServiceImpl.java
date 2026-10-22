@@ -1,8 +1,8 @@
 package br.com.nataliasantos.distributedstockexchangesimulator.domain.service.ativos.impl;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.AtivoDTO;
-import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.ApiResult;
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.AtivoRepository;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.ativo.AtivoDTO;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.utils.ApiResult;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.ativo.AtivoRepository;
 import br.com.nataliasantos.distributedstockexchangesimulator.domain.service.ativos.AtivosService;
 import br.com.nataliasantos.distributedstockexchangesimulator.domain.service.ativos.utils.AtivosUtil;
 import lombok.RequiredArgsConstructor;
