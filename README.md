@@ -311,17 +311,6 @@ Esse fluxo garante rastreabilidade completa entre os requisitos do projeto e os 
 
 ---
 
-# 🔗 Links Importantes
-
-| Recurso | Link |
-|----------|----------|
-| Repositório | https://github.com/nataliassantoz/Distributed-Stock-Exchange-Simulator |
-| Milestones | https://github.com/nataliassantoz/Distributed-Stock-Exchange-Simulator/milestones |
-| Issues | https://github.com/nataliassantoz/Distributed-Stock-Exchange-Simulator/issues |
-| Project Board | https://github.com/users/nataliassantoz/projects/2/views/1?layout_template=board |
-
----
-
 # 🧩 Conceitos de Sistemas Distribuídos
 
 O projeto explora diversos conceitos clássicos da área de Sistemas Distribuídos:
