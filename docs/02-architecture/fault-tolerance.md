@@ -29,7 +29,7 @@ A estratégia utiliza os componentes já previstos na arquitetura:
 
 **Comportamento esperado:**
 
-1. O React identifica que perdeu a comunicação e informa ao usuário que está desconectado.
+1. O Vue identifica que perdeu a comunicação e informa ao usuário que está desconectado.
 2. A ordem **continua válida**, porque já foi aceita pelo servidor.
 3. O saldo reservado permanece comprometido com a ordem; ele não fica disponível para outras compras.
 4. Enquanto o servidor continuar funcionando, a ordem pode ser executada mesmo com João offline.
@@ -45,11 +45,11 @@ A tela antiga de João pode ainda mostrar 10 ações pendentes. Por isso, recone
 
 **Fluxo de recuperação:**
 
-1. O React restabelece a comunicação com o backend.
+1. O Vue restabelece a comunicação com o backend.
 2. O backend verifica a identificação/sessão do investidor. Se a sessão não for mais válida, será necessário autenticar novamente.
-3. O React consulta a API REST para buscar **saldo, carteira e ordens atualizados**.
+3. O Vue consulta a API REST para buscar **saldo, carteira e ordens atualizados**.
 4. O Spring Boot consulta os dados confirmados no PostgreSQL.
-5. O React substitui as informações antigas pelas atuais: **4 ações executadas e 6 pendentes**.
+5. O Vue substitui as informações antigas pelas atuais: **4 ações executadas e 6 pendentes**.
 6. O cliente volta a acompanhar novas atualizações pelo WebSocket.
 
 **Regra principal:** depois de reconectar, a interface deve confiar nos dados oficiais do backend, e não apenas no que estava exibindo antes da queda.
@@ -124,7 +124,7 @@ Se o Livro de Ofertas estiver na memória, seu conteúdo será perdido quando o 
 
 | Parte do sistema | Responsabilidade planejada |
 |---|---|
-| **React** | Informar desconexão, restabelecer comunicação e atualizar a tela com consultas REST. |
+| **Vue** | Informar desconexão, restabelecer comunicação e atualizar a tela com consultas REST. |
 | **Controllers / API REST** | Expor consultas autenticadas de saldo, carteira e ordens. |
 | **Services** | Coordenar consultas e operações, respeitando regras de negócio e consistência. |
 | **Persistência / PostgreSQL** | Armazenar ordens, reservas e negociações confirmadas. |

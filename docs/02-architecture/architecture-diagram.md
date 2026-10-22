@@ -9,7 +9,7 @@ Descrever a **arquitetura lógica planejada** do Simulator, seus componentes, re
 ```mermaid
 %%{init: {"flowchart": {"curve": "step", "nodeSpacing": 100, "rankSpacing": 120}}}%%
 flowchart TD
-    U[Investidor humano] -->|Interações| HB[Home Broker - React]
+    U[Investidor humano] -->|Interações| HB[Home Broker - Vue]
 
     HB -->|REST: login, consultas e ordens| API[API Backend - Spring Boot]
     API -->|REST: respostas e resultados| HB
@@ -40,7 +40,7 @@ flowchart TD
 
 | Componente | Entrada | Responsabilidade | Saída |
 |---|---|---|---|
-| **Home Broker (React)** | Ações do investidor e eventos WebSocket | Exibir mercado, carteira e operações; permitir envio de ordens | Requisições REST à API |
+| **Home Broker (Vue)** | Ações do investidor e eventos WebSocket | Exibir mercado, carteira e operações; permitir envio de ordens | Requisições REST à API |
 | **API Backend (Spring Boot)** | Requisições REST e ordens dos agentes | Autenticar, autorizar, validar e coordenar operações | Respostas, ordens para processamento, dados persistidos e eventos |
 | **Matching Engine / Livro de Ofertas** | Ordens validadas | Organizar ofertas, aplicar prioridade preço-tempo e casar ordens compatíveis | Negociações executadas, execuções parciais e ordens pendentes |
 | **Banco de Dados (PostgreSQL)** | Operações de gravação e consulta do backend | Persistir o estado relevante da simulação | Dados recuperados para o backend |
@@ -81,7 +81,7 @@ flowchart TD
 
 ## 5. Tecnologias e limites
 
-- **Frontend:** React.
+- **Frontend:** Vue.
 - **Backend:** Spring Boot, com API REST e comunicação WebSocket.
 - **Persistência:** PostgreSQL, Spring Data JPA / Hibernate e Flyway.
 - **Infraestrutura prevista:** Docker e Docker Compose.
