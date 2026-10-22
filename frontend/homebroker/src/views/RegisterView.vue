@@ -6,7 +6,6 @@ import { useAuthStore } from '@/stores/authStore'
 const router = useRouter()
 const authStore = useAuthStore()
 
-// ── Form state ────────────────────────────────────────
 const form = reactive({
   nome: '',
   email: '',
@@ -18,7 +17,6 @@ const form = reactive({
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 
-// ── Validation ────────────────────────────────────────
 const nomeError = computed(() => {
   if (!form.nome) return ''
   return form.nome.trim().length < 3 ? 'Nome deve ter ao menos 3 caracteres' : ''
@@ -77,7 +75,6 @@ const isFormValid = computed(
     !confirmarSenhaError.value
 )
 
-// ── Submit ────────────────────────────────────────────
 async function handleSubmit() {
   if (!isFormValid.value) return
   try {
@@ -87,16 +84,14 @@ async function handleSubmit() {
       senha: form.senha,
       tipo: form.tipo,
     })
-    router.push({ name: 'home' })
+    router.push({ name: 'menu-principal' })
   } catch {
-    // erro tratado pelo store (authStore.error)
   }
 }
 </script>
 
 <template>
   <div class="auth-page">
-    <!-- Background decorativo -->
     <div class="auth-bg">
       <div class="auth-bg__orb auth-bg__orb--1" />
       <div class="auth-bg__orb auth-bg__orb--2" />
@@ -104,7 +99,6 @@ async function handleSubmit() {
     </div>
 
     <main class="auth-container animate-fade-in-up">
-      <!-- Cabeçalho do card -->
       <div class="auth-header">
         <div class="auth-logo">
           <svg width="32" height="32" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,9 +112,7 @@ async function handleSubmit() {
         <p class="auth-subtitle">Comece a simular investimentos agora mesmo</p>
       </div>
 
-      <!-- Formulário -->
       <form id="form-registro" class="auth-form" novalidate @submit.prevent="handleSubmit">
-        <!-- Nome -->
         <div class="form-group" :class="{ 'form-group--error': nomeError }">
           <label for="reg-nome" class="form-label">Nome completo</label>
           <div class="form-input-wrapper">
@@ -142,7 +134,6 @@ async function handleSubmit() {
           <span v-if="nomeError" class="form-error-msg">{{ nomeError }}</span>
         </div>
 
-        <!-- Email -->
         <div class="form-group" :class="{ 'form-group--error': emailError }">
           <label for="reg-email" class="form-label">Email</label>
           <div class="form-input-wrapper">
@@ -164,7 +155,6 @@ async function handleSubmit() {
           <span v-if="emailError" class="form-error-msg">{{ emailError }}</span>
         </div>
 
-        <!-- Tipo de conta -->
         <div class="form-group">
           <label class="form-label">Tipo de conta</label>
           <div class="tipo-selector">
@@ -199,7 +189,6 @@ async function handleSubmit() {
           </p>
         </div>
 
-        <!-- Senha -->
         <div class="form-group" :class="{ 'form-group--error': senhaError }">
           <label for="reg-senha" class="form-label">Senha</label>
           <div class="form-input-wrapper">
@@ -234,7 +223,6 @@ async function handleSubmit() {
           </div>
           <span v-if="senhaError" class="form-error-msg">{{ senhaError }}</span>
 
-          <!-- Força da senha -->
           <div v-if="form.senha" class="password-strength">
             <div class="password-strength__bars">
               <span
@@ -250,7 +238,6 @@ async function handleSubmit() {
           </div>
         </div>
 
-        <!-- Confirmar senha -->
         <div class="form-group" :class="{ 'form-group--error': confirmarSenhaError }">
           <label for="reg-confirmar-senha" class="form-label">Confirmar senha</label>
           <div class="form-input-wrapper">
@@ -287,7 +274,6 @@ async function handleSubmit() {
         </div>
 
 
-        <!-- Feedback de erro da API -->
         <Transition name="alert">
           <div v-if="authStore.error" id="reg-error-alert" class="form-alert form-alert--error">
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -297,7 +283,6 @@ async function handleSubmit() {
           </div>
         </Transition>
 
-        <!-- Submit -->
         <button
           id="btn-registro-submit"
           type="submit"
@@ -308,12 +293,10 @@ async function handleSubmit() {
           <span>{{ authStore.loading ? 'Criando conta…' : 'Criar conta' }}</span>
         </button>
 
-        <!-- Divisor -->
         <div class="form-divider">
           <span>ou</span>
         </div>
 
-        <!-- Link para login -->
         <p class="form-redirect">
           Já tem uma conta?
           <router-link id="link-para-login" to="/login" class="form-link">
@@ -326,7 +309,6 @@ async function handleSubmit() {
 </template>
 
 <style scoped>
-/* ── Layout ─────────────────────────────────────────── */
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -337,7 +319,6 @@ async function handleSubmit() {
   overflow: hidden;
 }
 
-/* ── Background ─────────────────────────────────────── */
 .auth-bg {
   position: fixed;
   inset: 0;
@@ -378,7 +359,6 @@ async function handleSubmit() {
   background-size: 60px 60px;
 }
 
-/* ── Card ───────────────────────────────────────────── */
 .auth-container {
   position: relative;
   z-index: 1;
@@ -395,7 +375,6 @@ async function handleSubmit() {
     0 0 0 1px rgba(16,185,129,0.05) inset;
 }
 
-/* ── Header ─────────────────────────────────────────── */
 .auth-header {
   text-align: center;
   margin-bottom: 32px;
@@ -427,7 +406,6 @@ async function handleSubmit() {
   color: var(--text-secondary);
 }
 
-/* ── Form ───────────────────────────────────────────── */
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -527,7 +505,6 @@ async function handleSubmit() {
   color: #f87171;
 }
 
-/* ── Tipo de conta ──────────────────────────────────── */
 .tipo-selector {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -563,7 +540,6 @@ async function handleSubmit() {
   box-shadow: 0 0 16px rgba(16,185,129,0.1);
 }
 
-/* ── Força da senha ─────────────────────────────────── */
 .password-strength {
   display: flex;
   align-items: center;
@@ -593,7 +569,6 @@ async function handleSubmit() {
   transition: color 0.3s;
 }
 
-/* ── Checkbox de termos ─────────────────────────────── */
 .terms-checkbox {
   display: flex;
   align-items: flex-start;
@@ -635,7 +610,6 @@ async function handleSubmit() {
   line-height: 1.5;
 }
 
-/* ── Alert ──────────────────────────────────────────── */
 .form-alert {
   display: flex;
   align-items: center;
@@ -659,7 +633,6 @@ async function handleSubmit() {
   transform: translateY(-6px);
 }
 
-/* ── Botão primário ─────────────────────────────────── */
 .btn-primary {
   display: flex;
   align-items: center;
@@ -707,7 +680,6 @@ async function handleSubmit() {
   to { transform: rotate(360deg); }
 }
 
-/* ── Divisor ────────────────────────────────────────── */
 .form-divider {
   display: flex;
   align-items: center;
@@ -724,7 +696,6 @@ async function handleSubmit() {
   background: rgba(148,163,184,0.12);
 }
 
-/* ── Redirect ───────────────────────────────────────── */
 .form-redirect {
   text-align: center;
   font-size: 0.875rem;
@@ -742,7 +713,6 @@ async function handleSubmit() {
   text-decoration: underline;
 }
 
-/* ── Responsive ─────────────────────────────────────── */
 @media (max-width: 480px) {
   .auth-container {
     padding: 32px 24px;

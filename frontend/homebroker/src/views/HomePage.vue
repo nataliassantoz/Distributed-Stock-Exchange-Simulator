@@ -77,7 +77,7 @@ const steps = [
   },
 ]
 
-// Ticker data for the animated bar
+// Mock Up de Ativos
 const tickerItems = [
   { symbol: 'AAA3', price: '42.50', change: '+2.35%', up: true },
   { symbol: 'BBB4', price: '18.90', change: '-1.12%', up: false },
@@ -89,14 +89,12 @@ const tickerItems = [
 
 <template>
   <main class="home">
-    <!-- Background Orbs -->
     <div class="home__orbs" aria-hidden="true">
       <div class="home__orb home__orb--1"></div>
       <div class="home__orb home__orb--2"></div>
       <div class="home__orb home__orb--3"></div>
     </div>
 
-    <!-- ===== TICKER BAR ===== -->
     <div class="ticker" aria-label="Cotações simuladas">
       <div class="ticker__track">
         <div class="ticker__content" v-for="i in 2" :key="i">
@@ -118,7 +116,6 @@ const tickerItems = [
       </div>
     </div>
 
-    <!-- ===== HERO SECTION ===== -->
     <section id="hero" class="hero">
       <div class="hero__container">
         <div class="hero__content animate-fade-in-up">
@@ -150,7 +147,6 @@ const tickerItems = [
             </a>
           </div>
 
-          <!-- Stats -->
           <div class="hero__stats">
             <div class="hero__stat">
               <span class="hero__stat-number">5+</span>
@@ -169,7 +165,6 @@ const tickerItems = [
           </div>
         </div>
 
-        <!-- Hero Visual -->
         <div class="hero__visual animate-fade-in-up delay-300">
           <div class="hero__chart-card glass">
             <div class="hero__chart-header">
@@ -184,20 +179,17 @@ const tickerItems = [
             </div>
             <div class="hero__chart-graph">
               <svg viewBox="0 0 400 150" preserveAspectRatio="none" class="hero__chart-svg">
-                <!-- Gradient fill -->
                 <defs>
                   <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" style="stop-color: var(--accent-primary); stop-opacity: 0.3" />
                     <stop offset="100%" style="stop-color: var(--accent-primary); stop-opacity: 0" />
                   </linearGradient>
                 </defs>
-                <!-- Area -->
                 <path
                   d="M0,120 Q30,100 60,95 T120,80 T180,60 T240,70 T300,40 T360,30 T400,20 V150 H0 Z"
                   fill="url(#chartGradient)"
                   class="hero__chart-area"
                 />
-                <!-- Line -->
                 <path
                   d="M0,120 Q30,100 60,95 T120,80 T180,60 T240,70 T300,40 T360,30 T400,20"
                   fill="none"
@@ -206,7 +198,6 @@ const tickerItems = [
                   stroke-linecap="round"
                   class="hero__chart-line"
                 />
-                <!-- Dot -->
                 <circle cx="400" cy="20" r="4" fill="var(--accent-primary)" class="hero__chart-dot" />
               </svg>
             </div>
@@ -219,7 +210,6 @@ const tickerItems = [
             </div>
           </div>
 
-          <!-- Floating mini cards -->
           <div class="hero__float-card hero__float-card--1 glass">
             <div class="hero__float-icon hero__float-icon--green">↑</div>
             <div>
@@ -239,7 +229,6 @@ const tickerItems = [
       </div>
     </section>
 
-    <!-- ===== FEATURES SECTION ===== -->
     <section id="funcionalidades" class="features">
       <div class="features__container">
         <div class="features__header observe">
@@ -262,34 +251,28 @@ const tickerItems = [
             :style="{ animationDelay: `${index * 0.1}s` }"
           >
             <div class="features__card-icon" :class="`features__card-icon--${feature.icon}`">
-              <!-- Wallet -->
               <svg v-if="feature.icon === 'wallet'" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
                 <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
                 <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
               </svg>
-              <!-- Arrows -->
               <svg v-if="feature.icon === 'arrows'" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M7 3L7 21M7 3L3 7M7 3L11 7"/>
                 <path d="M17 21L17 3M17 21L13 17M17 21L21 17"/>
               </svg>
-              <!-- Chart -->
               <svg v-if="feature.icon === 'chart'" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 3v18h18"/>
                 <path d="M7 16l4-4 4 2 6-8"/>
               </svg>
-              <!-- Book -->
               <svg v-if="feature.icon === 'book'" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
                 <line x1="8" y1="7" x2="16" y2="7"/>
                 <line x1="8" y1="11" x2="13" y2="11"/>
               </svg>
-              <!-- Engine -->
               <svg v-if="feature.icon === 'engine'" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="3"/>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
               </svg>
-              <!-- Shield -->
               <svg v-if="feature.icon === 'shield'" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 <path d="M9 12l2 2 4-4"/>
@@ -303,7 +286,6 @@ const tickerItems = [
       </div>
     </section>
 
-    <!-- ===== HOW IT WORKS SECTION ===== -->
     <section id="como-funciona" class="how-it-works">
       <div class="how-it-works__container">
         <div class="how-it-works__header observe">
@@ -321,9 +303,6 @@ const tickerItems = [
             class="how-it-works__step observe"
             :style="{ animationDelay: `${index * 0.15}s` }"
           >
-            <!-- Connector line -->
-            <div v-if="index < steps.length - 1" class="how-it-works__connector"></div>
-
             <div class="how-it-works__step-number">
               {{ step.number }}
             </div>
@@ -334,7 +313,6 @@ const tickerItems = [
       </div>
     </section>
 
-    <!-- ===== CTA FINAL ===== -->
     <section class="cta-final">
       <div class="cta-final__container observe">
         <div class="cta-final__glow" aria-hidden="true"></div>
@@ -355,7 +333,6 @@ const tickerItems = [
       </div>
     </section>
 
-    <!-- ===== FOOTER ===== -->
     <footer class="footer">
       <div class="footer__container">
         <div class="footer__logo">
@@ -376,7 +353,6 @@ const tickerItems = [
 </template>
 
 <style scoped>
-/* ===== TICKER ===== */
 .ticker {
   position: fixed;
   top: 68px;
@@ -438,7 +414,6 @@ const tickerItems = [
   background: rgba(239, 68, 68, 0.1);
 }
 
-/* ===== BACKGROUND ORBS ===== */
 .home {
   position: relative;
   overflow: hidden;
@@ -484,7 +459,6 @@ const tickerItems = [
   animation-delay: 4s;
 }
 
-/* ===== HERO ===== */
 .hero {
   position: relative;
   z-index: 1;
@@ -707,7 +681,6 @@ const tickerItems = [
   font-weight: 600;
 }
 
-/* Floating Cards */
 .hero__float-card {
   position: absolute;
   display: flex;
@@ -766,7 +739,6 @@ const tickerItems = [
 .hero__float-value--green { color: var(--accent-primary); }
 .hero__float-value--red { color: #ef4444; }
 
-/* ===== FEATURES ===== */
 .features {
   position: relative;
   z-index: 1;
@@ -872,7 +844,6 @@ const tickerItems = [
   line-height: 1.6;
 }
 
-/* ===== HOW IT WORKS ===== */
 .how-it-works {
   position: relative;
   z-index: 1;
@@ -936,16 +907,6 @@ const tickerItems = [
   transform: translateY(0);
 }
 
-.how-it-works__connector {
-  position: absolute;
-  top: 52px;
-  right: -16px;
-  width: calc(100% - 60px);
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent-primary), transparent);
-  transform: translateX(100%);
-  opacity: 0.3;
-}
 
 .how-it-works__step-number {
   width: 56px;
@@ -983,7 +944,6 @@ const tickerItems = [
   line-height: 1.6;
 }
 
-/* ===== CTA FINAL ===== */
 .cta-final {
   position: relative;
   z-index: 1;
@@ -1093,7 +1053,6 @@ const tickerItems = [
   color: var(--text-muted);
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
   .hero__container {
     grid-template-columns: 1fr;
@@ -1113,9 +1072,6 @@ const tickerItems = [
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .how-it-works__connector {
-    display: none;
-  }
 }
 
 @media (max-width: 640px) {

@@ -10,7 +10,6 @@ const api = axios.create({
   },
 })
 
-// Cache do token CSRF exigido pelo Spring Security
 let csrfCache = null
 
 export async function carregarCsrf() {
@@ -32,7 +31,6 @@ export function invalidarCsrf() {
   csrfCache = null
 }
 
-// Interceptor de requisição: anexa token CSRF para requisições mutativas (POST, PUT, DELETE, PATCH)
 api.interceptors.request.use(
   async (config) => {
     const method = config.method ? config.method.toUpperCase() : 'GET'
@@ -53,7 +51,6 @@ api.interceptors.response.use(
     if (error.response) {
       const { status } = error.response
 
-      // Se der 403 (token CSRF inválido ou expirado), invalida o cache
       if (status === 403) {
         invalidarCsrf()
         console.warn('[API] Acesso negado ou token CSRF inválido.')

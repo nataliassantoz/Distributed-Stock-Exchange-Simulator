@@ -20,6 +20,18 @@ const routes = [
     component: () => import('@/views/RegisterView.vue'),
     meta: { title: 'Criar conta — Home Broker' },
   },
+  {
+    path: '/menu-principal',
+    name: 'menu-principal',
+    component: () => import('@/views/MenuPrincipalView.vue'),
+    meta: { title: 'Painel — Home Broker', requiresAuth: true },
+  },
+  {
+    path: '/mercado',
+    name: 'mercado',
+    component: () => import('@/views/MercadoView.vue'),
+    meta: { title: 'Mercado — Home Broker', requiresAuth: true },
+  },
 ]
 
 const router = createRouter({
@@ -38,6 +50,13 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   document.title = to.meta?.title || 'Home Broker'
+
+  if (to.meta?.requiresAuth) {
+    const token = localStorage.getItem('hb_token')
+    if (!token) {
+      return { name: 'login' }
+    }
+  }
 })
 
 export default router

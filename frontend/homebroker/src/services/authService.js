@@ -1,11 +1,5 @@
 import api, { invalidarCsrf } from './api'
 
-/**
-  * Serviço de autenticação conectado aos endpoints do Spring Boot (/api/auth/*):
-  * - POST /api/auth/cadastro
-  * - POST /api/auth/login
-  * - GET  /api/auth/me
-  */
 const authService = {
   /**
    * Realiza login do usuário.
@@ -45,9 +39,6 @@ const authService = {
     return response.data
   },
 
-  /**
-   * Realiza logout limpando tokens CSRF locais.
-   */
   logout() {
     invalidarCsrf()
   },
