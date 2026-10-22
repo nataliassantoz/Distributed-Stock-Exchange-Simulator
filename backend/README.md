@@ -142,6 +142,47 @@ a 72 bytes UTF-8 pelo BCrypt.
 A collection para testar este fluxo no Bruno está em [`bruno/`](bruno/README.md).
 Abra a pasta como collection, selecione **Local** e execute as requisições em ordem.
 
+## Sessões ativas — SESSION-001
+
+O login registra uma sessão autenticada com `idSessao`, `idUsuario`,
+`dataHoraConexao` (UTC) e `status` (`ATIVA`). O identificador corresponde ao cookie
+`JSESSIONID`; não é necessário criar uma sessão em uma chamada separada.
+
+| Método | Endpoint | Resultado |
+| --- | --- | --- |
+| GET | `/api/sessoes/atual` | 200, dados da sessão atual |
+| GET | `/api/sessoes` | 200, lista das sessões ativas do próprio usuário |
+| POST | `/api/auth/logout` | 200, invalida a sessão atual, remove seu registro e apaga o cookie |
+
+As consultas exigem autenticação; sem sessão válida retornam 401. O logout exige
+CSRF, como os demais POSTs. Consulte `/api/auth/csrf` para obter o token antes de
+enviá-lo. As respostas mantêm o envelope `ApiResult`.
+
+Cada navegador/dispositivo pode manter uma sessão independente, inclusive para o
+mesmo usuário. Logout de uma sessão preserva as demais. Novo login na mesma sessão
+renova o identificador e substitui o registro anterior. Sessões anônimas criadas
+para obter CSRF não entram no registro de participantes autenticados.
+
+O registro usa memória local com acesso concorrente. Expiração por inatividade ou
+invalidação remove a sessão pelo listener do contêiner. Não há histórico de sessões
+encerradas, persistência distribuída ou recuperação após reinício nesta etapa.
+Fechar o navegador ou perder a rede não encerra imediatamente a sessão: ela pode
+permanecer válida até expirar. A remoção por timeout acompanha a verificação de
+expiração do contêiner, não um monitoramento de presença em tempo real.
+
+### Validação manual com dois investidores
+
+1. Abra dois perfis de navegador ou dois clientes com armazenamentos de cookies separados.
+2. Em cada cliente, obtenha CSRF, cadastre um usuário diferente e faça login.
+3. Consulte `/api/sessoes/atual` nos dois: IDs de sessão e usuário devem ser diferentes.
+4. Consulte `/api/auth/me` e `/api/sessoes` nos dois: ambos devem continuar autenticados e cada lista deve mostrar apenas suas próprias sessões.
+5. Envie logout com CSRF no primeiro cliente. Suas consultas protegidas devem retornar 401; o segundo deve continuar recebendo 200.
+
+Os testes `SessionTest`, `SessionServiceImplTest` e `SessionListenerTest` verificam
+login simultâneo de dois usuários via HTTP, isolamento, logout com CSRF, troca de
+identificador, múltiplas sessões por usuário, operações concorrentes e limpeza no
+evento de destruição usado na expiração/invalidação. Execute `./mvnw test`.
+
 ## Respostas de erro
 
 Os endpoints da API retornam `application/json` com o envelope `ApiResult<T>`:

@@ -1,4 +1,4 @@
-package br.com.nataliasantos.distributedstockexchangesimulator.domain.entity;
+package br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.ativo;
 
 import java.math.BigDecimal;
 import jakarta.persistence.*;

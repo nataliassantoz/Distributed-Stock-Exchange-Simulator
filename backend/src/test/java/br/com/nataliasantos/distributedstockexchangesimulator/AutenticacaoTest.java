@@ -1,6 +1,6 @@
 package br.com.nataliasantos.distributedstockexchangesimulator;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.UsuarioRepository;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.usuario.UsuarioRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

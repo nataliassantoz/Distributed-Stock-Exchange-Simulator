@@ -1,0 +1,28 @@
+meta {
+  name: Logout
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/auth/logout
+  body: none
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-CSRF-TOKEN: {{sessionCsrfToken}}
+}
+
+vars:pre-request {
+  sessionCsrfToken: gqflfrBVcA5Jfg0ISGUv9y5AT7VBRGc_bmucuz6SfgYtuddK4JeBSdEwSDZkST86LUgbzh12YtcgcQUSD179ilunT2AUieB6
+}
+
+tests {
+  test("Logout encerra a sessao", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().cdRetorno).to.equal(200);
+    expect(res.getBody().dados).to.equal(null);
+  });
+}

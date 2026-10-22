@@ -1,8 +1,9 @@
-package br.com.nataliasantos.distributedstockexchangesimulator.api.controller;
+package br.com.nataliasantos.distributedstockexchangesimulator.api.controller.autenticacao;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.UsuarioDTO;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.usuario.UsuarioDTO;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.service.session.impl.SessionServiceImpl;
 import br.com.nataliasantos.distributedstockexchangesimulator.domain.service.autenticacao.AutenticacaoService;
-import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.ApiResult;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.utils.ApiResult;
 import br.com.nataliasantos.distributedstockexchangesimulator.api.utils.ApiResultUtil;
 import org.springframework.http.ResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class AutenticacaoController {
 
     private final AutenticacaoService service;
+    private final SessionServiceImpl sessionServiceImpl;
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository contextRepository;
 
@@ -59,6 +61,7 @@ public class AutenticacaoController {
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
         contextRepository.saveContext(context, request, response);
+        sessionServiceImpl.registrar(request.getSession().getId(), Long.valueOf(authentication.getName()));
         return sessaoResult.resultSucesso(HttpStatus.OK, new UsuarioDTO.Response.Sessao(request.getSession().getId(),
                 service.identificar(Long.valueOf(authentication.getName()))));
     }

@@ -1,8 +1,20 @@
-package br.com.nataliasantos.distributedstockexchangesimulator.domain.entity;
+package br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.usuario;
 
 import java.math.BigDecimal;
 import br.com.nataliasantos.distributedstockexchangesimulator.core.enums.TipoUsuario;
-import jakarta.persistence.*;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.carteira.Carteira;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

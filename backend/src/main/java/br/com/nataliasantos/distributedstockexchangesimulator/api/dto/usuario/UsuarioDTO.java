@@ -1,4 +1,4 @@
-package br.com.nataliasantos.distributedstockexchangesimulator.api.dto;
+package br.com.nataliasantos.distributedstockexchangesimulator.api.dto.usuario;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;

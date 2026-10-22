@@ -1,9 +1,9 @@
 package br.com.nataliasantos.distributedstockexchangesimulator.domain.service.autenticacao;
 
-import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.UsuarioDTO;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.usuario.UsuarioDTO;
 import br.com.nataliasantos.distributedstockexchangesimulator.core.enums.TipoUsuario;
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.Usuario;
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.UsuarioRepository;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.usuario.Usuario;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.usuario.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

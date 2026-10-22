@@ -33,3 +33,10 @@ As respostas da API usam o envelope `cdRetorno`, `msgTecnica`, `msgUsuario` e `d
 Os campos do resultado ficam em `dados`, incluindo `dados.token` no CSRF,
 `dados.idSessao` no login e `dados.erros` em erros de validação.
 A consulta `GET /api/ativos?nome=petro&codigo=4` retorna a lista em `dados`.
+
+## Sessões ativas
+
+A pasta [`session`](session/README.md) contém um fluxo independente com cadastro,
+login, consulta da sessão atual, listagem, logout e verificação de acesso negado
+após logout. Execute as requisições de 01 a 09 com o ambiente **Local** e cookies
+habilitados.

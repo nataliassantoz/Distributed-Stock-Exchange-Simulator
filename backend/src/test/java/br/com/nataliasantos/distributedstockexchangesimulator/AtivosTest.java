@@ -1,10 +1,10 @@
 package br.com.nataliasantos.distributedstockexchangesimulator;
 
 import br.com.nataliasantos.distributedstockexchangesimulator.api.controller.ativos.AtivosController;
-import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.AtivoDTO;
+import br.com.nataliasantos.distributedstockexchangesimulator.api.dto.ativo.AtivoDTO;
 import br.com.nataliasantos.distributedstockexchangesimulator.api.utils.ApiResultUtil;
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.Ativo;
-import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.AtivoRepository;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.ativo.Ativo;
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.repository.ativo.AtivoRepository;
 import br.com.nataliasantos.distributedstockexchangesimulator.domain.service.ativos.impl.AtivosServiceImpl;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;

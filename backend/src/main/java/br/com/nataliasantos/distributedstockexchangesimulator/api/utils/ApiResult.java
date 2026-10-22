@@ -1,4 +1,4 @@
-package br.com.nataliasantos.distributedstockexchangesimulator.api.dto;
+package br.com.nataliasantos.distributedstockexchangesimulator.api.utils;
 
 import lombok.Data;
 

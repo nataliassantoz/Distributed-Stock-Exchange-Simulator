@@ -1,10 +1,10 @@
-package br.com.nataliasantos.distributedstockexchangesimulator.domain.entity;
+package br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.carteira;
 
+import br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,7 +20,7 @@ public class Carteira {
     @JoinColumn(name = "usuario_id", nullable = false, foreignKey = @ForeignKey(name = "fk_carteira_usuario"))
     private Usuario usuario;
 
-    Carteira(Usuario usuario) {
+    public Carteira(Usuario usuario) {
         this.usuario = usuario;
     }
 }
