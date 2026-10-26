@@ -206,3 +206,52 @@ Erros de validação incluem `dados.erros`, com as mensagens por campo, sem repe
 valores enviados. Erros inesperados retornam 500 com mensagem genérica e são
 registrados nos logs do servidor. Falhas de autenticação e acesso nos filtros do
 Spring Security também usam o tratamento global.
+
+## Investidores conectados — SESSION-002
+
+`GET /mercado/investidores` exige autenticação pelo cookie `JSESSIONID`.
+Retorna `200` com um item por investidor que possui pelo menos uma sessão
+válida nesta instância, ordenado por `idUsuario`. Sem autenticação, retorna `401`.
+A rota segue o contrato da issue #16, sem o prefixo `/api`.
+
+```json
+{
+  "cdRetorno": 200,
+  "msgTecnica": null,
+  "msgUsuario": "Operação realizada com sucesso",
+  "dados": [
+    {
+      "idUsuario": 1,
+      "nome": "Maria Silva",
+      "dataHoraConexao": "2026-10-22T12:00:00Z",
+      "quantidadeSessoes": 2
+    }
+  ]
+}
+```
+
+`dataHoraConexao` representa a conexão mais antiga entre as sessões ainda válidas
+do investidor; `quantidadeSessoes` conta essas sessões. Identificadores de sessão,
+email, senha e dados financeiros não são expostos. Uma consulta sem participantes
+retorna `dados: []`.
+
+Somente logins bem-sucedidos entram no registro. Logout remove a sessão atual;
+o investidor permanece na lista enquanto outra sessão estiver válida. A consulta
+exclui sessões invalidadas ou cujo prazo de inatividade já venceu, mesmo antes da
+limpeza periódica do contêiner. Consultar a lista não renova a atividade dos demais
+participantes. Fechar o navegador ou perder a rede não encerra imediatamente uma
+sessão: conectado significa possuir uma sessão autenticada válida, sem heartbeat.
+As sessões continuam em memória; não há histórico nem agregação entre instâncias.
+
+### Validação
+
+1. Cadastre e autentique dois investidores em navegadores ou clientes com cookies separados.
+2. Consulte `/mercado/investidores`: os dois devem aparecer.
+3. Autentique o primeiro investidor em outro cliente: ele deve aparecer uma vez, com duas sessões.
+4. Faça logout de uma dessas sessões: o investidor deve continuar listado com uma sessão.
+5. Faça logout da outra: apenas o segundo investidor deve aparecer.
+6. Consulte sem autenticação: a resposta deve ser `401`.
+
+Execute `mvn test` em `backend/`. `InvestidoresTest` valida o endpoint, autenticação,
+agregação de sessões e logout; `SessionServiceImplTest` cobre exclusão de sessões
+expiradas, invalidadas e removidas, lista vazia e sessões sem timeout.

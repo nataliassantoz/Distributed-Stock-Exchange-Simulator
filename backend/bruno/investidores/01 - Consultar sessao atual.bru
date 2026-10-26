@@ -1,0 +1,30 @@
+meta {
+  name: Consultar sessao atual
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/sessoes/atual
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  bru.setVar("investidoresUsuarioId", null);
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setVar("investidoresUsuarioId", res.getBody().dados.idUsuario);
+  }
+}
+
+tests {
+  test("Sessao autenticada ativa", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().cdRetorno).to.equal(200);
+    expect(res.getBody().dados.idUsuario).to.be.a("number").and.above(0);
+    expect(res.getBody().dados.status).to.equal("ATIVA");
+  });
+}

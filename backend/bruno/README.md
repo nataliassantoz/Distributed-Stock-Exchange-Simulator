@@ -40,3 +40,9 @@ A pasta [`session`](session/README.md) contém um fluxo independente com cadastr
 login, consulta da sessão atual, listagem, logout e verificação de acesso negado
 após logout. Execute as requisições de 01 a 09 com o ambiente **Local** e cookies
 habilitados.
+
+## Investidores conectados
+
+A pasta [`investidores`](investidores/README.md) reutiliza a sessão autenticada
+pelo cookie `JSESSIONID`. Após o login, execute suas duas requisições na ordem para
+consultar a sessão atual e listar os investidores conectados ao mercado.

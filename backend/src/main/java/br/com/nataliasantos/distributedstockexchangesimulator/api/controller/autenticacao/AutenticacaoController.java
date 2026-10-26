@@ -61,7 +61,7 @@ public class AutenticacaoController {
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
         contextRepository.saveContext(context, request, response);
-        sessionServiceImpl.registrar(request.getSession().getId(), Long.valueOf(authentication.getName()));
+        sessionServiceImpl.registrar(request.getSession(), Long.valueOf(authentication.getName()));
         return sessaoResult.resultSucesso(HttpStatus.OK, new UsuarioDTO.Response.Sessao(request.getSession().getId(),
                 service.identificar(Long.valueOf(authentication.getName()))));
     }
