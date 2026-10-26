@@ -1,0 +1,34 @@
+meta {
+  name: Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-CSRF-TOKEN: {{ordensCsrfToken}}
+}
+
+body:json {
+  {
+    "email": "{{ordensEmail}}",
+    "senha": "{{senha}}"
+  }
+}
+
+tests {
+  test("Retorna HTTP 200 no envelope ApiResult", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().cdRetorno).to.equal(200);
+  });
+  
+  test("Login pertence ao investidor cadastrado", function () {
+    expect(res.getBody().dados.usuario.id).to.equal(bru.getVar("ordensUsuarioId"));
+  });
+}
