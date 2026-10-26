@@ -255,3 +255,33 @@ As sessões continuam em memória; não há histórico nem agregação entre ins
 Execute `mvn test` em `backend/`. `InvestidoresTest` valida o endpoint, autenticação,
 agregação de sessões e logout; `SessionServiceImplTest` cobre exclusão de sessões
 expiradas, invalidadas e removidas, lista vazia e sessões sem timeout.
+
+## Registro de ordens — ORDER-001
+
+`POST /ordens` exige sessão autenticada e token CSRF. Envie:
+
+```json
+{"ativo": 1, "tipo": "COMPRA", "quantidade": 10, "preco": 12.50}
+```
+
+`ativo` é o ID de um ativo existente; `tipo` aceita `COMPRA` ou `VENDA`.
+Quantidade deve ser inteira e positiva. Preço deve ser positivo, com até 17
+algarismos inteiros e duas casas decimais. O servidor define investidor pela
+sessão, ID, status `PENDENTE` e `dataHora` em UTC. Retorna `201` com esses campos
+em `dados`, no envelope `ApiResult`. Dados inválidos retornam `400`, ativo
+inexistente `404`, ausência de autenticação com CSRF válido `401` e CSRF
+inválido/ausente `403`.
+
+Esta etapa registra solicitações: não valida disponibilidade nem reserva dinheiro
+ou ações, não executa matching e não altera carteira, saldo ou preço do ativo.
+`PENDENTE` indica uma solicitação persistida, não uma garantia de recursos para
+execução. Validação financeira e reservas precisam ser implementadas antes de
+habilitar o processamento de negociações. Quantidade original e restante são
+inicialmente iguais; a prioridade futura pode desempatar `criada_em` pelo `id`.
+Reenvios criam ordens independentes; não há chave de idempotência nesta etapa.
+
+Validação manual: autentique-se conforme o fluxo acima, obtenha CSRF novamente
+após o login e envie o JSON para `/ordens`. Repita com `VENDA`: ambas devem
+retornar IDs distintos e status `PENDENTE`. Consulte a tabela `ordem` para conferir
+a persistência. Quantidade zero, preço negativo e tipo inválido devem retornar
+`400` sem criar registros. Execute `./mvnw test` para os testes automatizados.

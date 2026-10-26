@@ -1,7 +1,7 @@
 meta {
   name: Listar investidores conectados
   type: http
-  seq: 2
+  seq: 1
 }
 
 get {
@@ -19,7 +19,7 @@ tests {
     expect(investidores.some(investidor =>
       investidor.idUsuario === bru.getVar("investidoresUsuarioId"))).to.equal(true);
   });
-
+  
   test("Investidores unicos e ordenados com informacoes basicas", function () {
     const investidores = res.getBody().dados;
     const ids = investidores.map(investidor => investidor.idUsuario);
@@ -34,7 +34,7 @@ tests {
       expect(Number.isNaN(Date.parse(investidor.dataHoraConexao))).to.equal(false);
     });
   });
-
+  
   test("Resposta nao expoe credenciais ou dados privados", function () {
     res.getBody().dados.forEach(investidor => {
       expect(investidor).to.have.all.keys("idUsuario", "nome", "dataHoraConexao", "quantidadeSessoes");

@@ -1,0 +1,24 @@
+meta {
+  name: Renovar CSRF apos login
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/auth/csrf
+  body: none
+  auth: none
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setVar("ordensCsrfToken", res.getBody().dados.token);
+  }
+}
+
+tests {
+  test("Retorna HTTP 200 no envelope ApiResult", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().cdRetorno).to.equal(200);
+  });
+}

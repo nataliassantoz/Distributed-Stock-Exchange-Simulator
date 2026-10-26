@@ -1,0 +1,59 @@
+meta {
+  name: Registrar venda
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/ordens
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  X-CSRF-TOKEN: {{ordensCsrfToken}}
+}
+
+body:json {
+  {
+    "ativo": {{ordemAtivoId}},
+    "tipo": "VENDA",
+    "quantidade": 10,
+    "preco": 12.50
+  }
+}
+
+vars:pre-request {
+  ordensCsrfToken: q1Jqlw951Y8IfwPt6-zh14DVW53eu7kX-MGUYcssqTUGJNL_nDFT8jdP5-olTDeM2sHV5bC0dqTsjoA6zPKiUvhInFE_E-H
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setVar("ordemVendaId", res.getBody().dados.id);
+  }
+}
+
+tests {
+  test("Retorna HTTP 201 no envelope ApiResult", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().cdRetorno).to.equal(201);
+  });
+  
+  test("Ordem pendente pertence ao investidor autenticado", function () {
+    const ordem = res.getBody().dados;
+    expect(ordem.id).to.be.a("number").and.above(0);
+    expect(ordem.investidor).to.equal(bru.getVar("ordensUsuarioId"));
+    expect(ordem.ativo).to.equal(Number(bru.getEnvVar("ordemAtivoId")));
+    expect(ordem.tipo).to.equal("VENDA");
+    expect(ordem.quantidade).to.equal(10);
+    expect(Number(ordem.preco)).to.equal(12.50);
+    expect(ordem.status).to.equal("PENDENTE");
+    expect(ordem.dataHora).to.be.a("string").and.not.empty;
+    expect(Number.isNaN(Date.parse(ordem.dataHora))).to.equal(false);
+  });
+  
+  test("Compra e venda possuem IDs distintos", function () {
+    expect(res.getBody().dados.id).to.not.equal(bru.getVar("ordemCompraId"));
+  });
+}
