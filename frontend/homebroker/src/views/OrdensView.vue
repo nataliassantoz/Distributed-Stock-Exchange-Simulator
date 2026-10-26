@@ -11,22 +11,18 @@ const ordemStore = useOrdemStore()
 const nomeUsuario = computed(() => authStore.nomeUsuario || 'Investidor')
 const primeiroNome = computed(() => nomeUsuario.value.split(' ')[0])
 
-// ── Formulário ──────────────────────────────────────────────────────────────
 const tipo = ref('COMPRA')
 const ativoSelecionado = ref('')
 const quantidade = ref('')
 const preco = ref('')
 
-// ── Estados de UI ────────────────────────────────────────────────────────────
 const isSubmitting = ref(false)
 const successData = ref(null)
 const formError = ref('')
 
-// ── Ativos disponíveis (carregados via store / mock) ────────────────────────
 const ativos = computed(() => ordemStore.ativos)
 const loadingAtivos = computed(() => ordemStore.loadingAtivos)
 
-// ── Validação ────────────────────────────────────────────────────────────────
 const erros = ref({ ativo: '', quantidade: '', preco: '' })
 
 function validarCampo(campo) {
@@ -55,7 +51,6 @@ function validarTudo() {
   return !erros.value.ativo && !erros.value.quantidade && !erros.value.preco
 }
 
-// ── Preço sugerido ao selecionar ativo ──────────────────────────────────────
 function onAtivoChange() {
   erros.value.ativo = ''
   const ativo = ativos.value.find((a) => a.ticker === ativoSelecionado.value)
@@ -64,7 +59,6 @@ function onAtivoChange() {
   }
 }
 
-// ── Envio da ordem ───────────────────────────────────────────────────────────
 async function enviarOrdem() {
   formError.value = ''
   if (!validarTudo()) return
@@ -102,7 +96,6 @@ function voltarAoMenu() {
   router.push('/menu-principal')
 }
 
-// ── Formatação ───────────────────────────────────────────────────────────────
 function formatarMoeda(valor) {
   return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
@@ -112,7 +105,6 @@ function formatarData(isoString) {
   return new Date(isoString).toLocaleString('pt-BR')
 }
 
-// ── Cores por ticker ─────────────────────────────────────────────────────────
 const tickerColors = {
   PETR4: { r: 16,  g: 185, b: 129 },
   VALE3: { r: 59,  g: 130, b: 246 },
@@ -134,7 +126,6 @@ function badgeStyle(ticker) {
   }
 }
 
-// ── Inicialização ────────────────────────────────────────────────────────────
 onMounted(() => {
   ordemStore.carregarAtivos()
 })
@@ -150,7 +141,7 @@ onMounted(() => {
     </div>
 
     <main class="ordens-main">
-      <!-- Cabeçalho -->
+      
       <header class="ordens-header animate-fade-in-up">
         <div class="header-row">
           <div class="header-left">
@@ -178,7 +169,7 @@ onMounted(() => {
         </div>
       </header>
 
-      <!-- Tela de Sucesso -->
+      
       <transition name="fade-slide" mode="out-in">
         <div v-if="successData" class="success-container animate-fade-in-up delay-100" key="success">
           <div class="success-card">
@@ -239,9 +230,9 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Formulário -->
+        
         <div v-else class="form-container animate-fade-in-up delay-100" key="form">
-          <!-- Seleção de tipo -->
+          
           <section class="section-tipo animate-fade-in-up delay-100">
             <div class="section-header">
               <h2 class="section-title">
@@ -277,7 +268,7 @@ onMounted(() => {
             </div>
           </section>
 
-          <!-- Formulário de campos -->
+          
           <section class="section-form animate-fade-in-up delay-200">
             <div class="section-header">
               <h2 class="section-title">
@@ -291,7 +282,7 @@ onMounted(() => {
             <div class="form-card">
               <form id="form-enviar-ordem" class="ordem-form" @submit.prevent="enviarOrdem" novalidate>
 
-                <!-- Campo: Ativo -->
+                
                 <div class="form-field" :class="{ 'form-field--error': erros.ativo }">
                   <label class="field-label" for="campo-ativo">Ativo</label>
                   <div class="select-wrapper">
@@ -324,7 +315,7 @@ onMounted(() => {
                     <span v-if="erros.ativo" class="field-error">{{ erros.ativo }}</span>
                   </transition>
 
-                  <!-- Preview do ativo selecionado -->
+                  
                   <transition name="fade-slide">
                     <div v-if="ativoSelecionado" class="ativo-preview">
                       <span class="ativo-badge" :style="badgeStyle(ativoSelecionado)">
@@ -340,7 +331,7 @@ onMounted(() => {
                   </transition>
                 </div>
 
-                <!-- Campo: Quantidade -->
+                
                 <div class="form-field" :class="{ 'form-field--error': erros.quantidade }">
                   <label class="field-label" for="campo-quantidade">Quantidade</label>
                   <div class="input-wrapper">
@@ -362,7 +353,7 @@ onMounted(() => {
                   </transition>
                 </div>
 
-                <!-- Campo: Preço -->
+                
                 <div class="form-field" :class="{ 'form-field--error': erros.preco }">
                   <label class="field-label" for="campo-preco">Preço por ação</label>
                   <div class="input-wrapper">
@@ -384,7 +375,7 @@ onMounted(() => {
                   </transition>
                 </div>
 
-                <!-- Resumo financeiro -->
+                
                 <transition name="fade-slide">
                   <div v-if="quantidade && preco && Number(quantidade) > 0 && Number(preco) > 0" class="resumo-financeiro">
                     <div class="resumo-row">
@@ -399,7 +390,7 @@ onMounted(() => {
                   </div>
                 </transition>
 
-                <!-- Erro geral -->
+                
                 <transition name="fade-error">
                   <div v-if="formError" class="form-error-banner">
                     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -409,7 +400,7 @@ onMounted(() => {
                   </div>
                 </transition>
 
-                <!-- Botão de envio -->
+                
                 <button
                   id="btn-enviar-ordem"
                   type="submit"
@@ -432,7 +423,7 @@ onMounted(() => {
             </div>
           </section>
 
-          <!-- Informativo de riscos -->
+          
           <section class="section-info animate-fade-in-up delay-300">
             <div class="info-card">
               <div class="info-icon">
@@ -456,7 +447,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* ── Estrutura da página ───────────────────────────────────────────────── */
+
 .ordens-page {
   min-height: 100vh;
   background-color: var(--bg-primary);
@@ -472,7 +463,7 @@ onMounted(() => {
   padding: 88px 40px 64px;
 }
 
-/* ── Background decorativo (mesmo padrão do CarteiraView) ─────────────── */
+
 .ordens-bg {
   position: fixed;
   inset: 0;
@@ -522,7 +513,7 @@ onMounted(() => {
   background-size: 60px 60px;
 }
 
-/* ── Cabeçalho ────────────────────────────────────────────────────────── */
+
 .ordens-header {
   margin-bottom: 40px;
 }
@@ -619,7 +610,7 @@ onMounted(() => {
   color: var(--text-primary);
 }
 
-/* ── Seções ────────────────────────────────────────────────────────────── */
+
 .section-header {
   display: flex;
   align-items: center;
@@ -638,7 +629,7 @@ onMounted(() => {
   letter-spacing: 0.05em;
 }
 
-/* ── Seleção de tipo ───────────────────────────────────────────────────── */
+
 .section-tipo {
   margin-bottom: 24px;
 }
@@ -688,7 +679,7 @@ onMounted(() => {
   box-shadow: 0 0 24px rgba(239,68,68,0.12);
 }
 
-/* ── Formulário ────────────────────────────────────────────────────────── */
+
 .section-form {
   margin-bottom: 24px;
 }
@@ -708,7 +699,7 @@ onMounted(() => {
   gap: 24px;
 }
 
-/* ── Campos ────────────────────────────────────────────────────────────── */
+
 .form-field {
   display: flex;
   flex-direction: column;
@@ -783,7 +774,7 @@ onMounted(() => {
   background: rgba(239,68,68,0.04);
 }
 
-/* ── Select ────────────────────────────────────────────────────────────── */
+
 .select-wrapper {
   position: relative;
 }
@@ -830,7 +821,7 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
-/* ── Preview do ativo ─────────────────────────────────────────────────── */
+
 .ativo-preview {
   display: flex;
   align-items: center;
@@ -867,7 +858,7 @@ onMounted(() => {
   margin-top: 2px;
 }
 
-/* ── Erros de campo ────────────────────────────────────────────────────── */
+
 .field-error {
   font-size: 0.78rem;
   color: #f87171;
@@ -876,7 +867,7 @@ onMounted(() => {
   gap: 4px;
 }
 
-/* ── Resumo financeiro ─────────────────────────────────────────────────── */
+
 .resumo-financeiro {
   padding: 16px 20px;
   border-radius: 12px;
@@ -925,7 +916,7 @@ onMounted(() => {
   line-height: 1.5;
 }
 
-/* ── Erro geral ────────────────────────────────────────────────────────── */
+
 .form-error-banner {
   display: flex;
   align-items: center;
@@ -938,7 +929,7 @@ onMounted(() => {
   font-size: 0.875rem;
 }
 
-/* ── Botão de envio ───────────────────────────────────────────────────── */
+
 .btn-enviar {
   display: flex;
   align-items: center;
@@ -984,7 +975,7 @@ onMounted(() => {
   box-shadow: 0 0 36px rgba(239,68,68,0.4);
 }
 
-/* ── Spinner ────────────────────────────────────────────────────────────── */
+
 .spinner-sm {
   width: 18px;
   height: 18px;
@@ -999,7 +990,7 @@ onMounted(() => {
   to { transform: rotate(360deg); }
 }
 
-/* ── Informativo ────────────────────────────────────────────────────────── */
+
 .section-info {
   margin-top: 8px;
 }
@@ -1053,7 +1044,7 @@ onMounted(() => {
   font-weight: 600;
 }
 
-/* ── Tela de sucesso ───────────────────────────────────────────────────── */
+
 .success-container {
   display: flex;
   justify-content: center;
@@ -1203,7 +1194,7 @@ onMounted(() => {
   box-shadow: 0 0 36px rgba(6,182,212,0.4);
 }
 
-/* ── Transições ─────────────────────────────────────────────────────────── */
+
 .fade-slide-enter-active,
 .fade-slide-leave-active {
   transition: all 0.35s ease;
@@ -1230,7 +1221,7 @@ onMounted(() => {
   transform: translateY(-4px);
 }
 
-/* ── Animações globais (mesmas das outras views) ────────────────────────── */
+
 @keyframes pulseGlow {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.7; transform: scale(1.05); }
@@ -1249,7 +1240,7 @@ onMounted(() => {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Responsivo ─────────────────────────────────────────────────────────── */
+
 @media (max-width: 640px) {
   .ordens-main {
     padding: 80px 20px 48px;
