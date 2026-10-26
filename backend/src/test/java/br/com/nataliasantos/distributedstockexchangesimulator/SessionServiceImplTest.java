@@ -14,11 +14,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class SessionServiceImplTest {
     private final SessionServiceImpl service = new SessionServiceImpl();
 
+    private br.com.nataliasantos.distributedstockexchangesimulator.domain.entity.session.Session registrar(String id, Long usuario) {
+        return service.registrar(id == null ? null : new org.springframework.mock.web.MockHttpSession(null, id), usuario);
+    }
+
     @Test
     void permiteMultiplasSessoesPorUsuarioEIsolaConsultas() {
-        var primeira = service.registrar("primeira", 1L);
-        var segunda = service.registrar("segunda", 1L);
-        service.registrar("outro", 2L);
+        var primeira = registrar("primeira", 1L);
+        var segunda = registrar("segunda", 1L);
+        registrar("outro", 2L);
         assertEquals(2, service.listar(1L).size());
         assertEquals(primeira, service.consultar("primeira", 1L));
         assertThrows(ResponseStatusException.class, () -> service.consultar("primeira", 2L));
@@ -29,11 +33,39 @@ class SessionServiceImplTest {
     }
 
     @Test
+    void listagemGlobalExcluiSessoesExpiradasInvalidasERemovidas() {
+        var ativa = new org.springframework.mock.web.MockHttpSession();
+        var expirada = org.mockito.Mockito.mock(jakarta.servlet.http.HttpSession.class);
+        org.mockito.Mockito.when(expirada.getId()).thenReturn("expirada");
+        org.mockito.Mockito.when(expirada.getMaxInactiveInterval()).thenReturn(1);
+        org.mockito.Mockito.when(expirada.getLastAccessedTime()).thenReturn(System.currentTimeMillis() - 2000);
+        var invalida = new org.springframework.mock.web.MockHttpSession();
+        var removida = new org.springframework.mock.web.MockHttpSession();
+        var esperada = service.registrar(ativa, 1L);
+        service.registrar(expirada, 2L);
+        service.registrar(invalida, 3L);
+        service.registrar(removida, 4L);
+        invalida.invalidate();
+        service.remover(removida.getId());
+        assertEquals(java.util.List.of(esperada), service.listarAtivas());
+        service.remover(ativa.getId());
+        assertTrue(service.listarAtivas().isEmpty());
+    }
+
+    @Test
+    void sessaoSemTimeoutPermaneceAtiva() {
+        var conexao = new org.springframework.mock.web.MockHttpSession();
+        conexao.setMaxInactiveInterval(0);
+        var esperada = service.registrar(conexao, 1L);
+        assertEquals(java.util.List.of(esperada), service.listarAtivas());
+    }
+
+    @Test
     void rejeitaIdentificadoresInvalidos() {
-        assertThrows(IllegalArgumentException.class, () -> service.registrar(null, 1L));
-        assertThrows(IllegalArgumentException.class, () -> service.registrar(" ", 1L));
-        assertThrows(IllegalArgumentException.class, () -> service.registrar("sessao", null));
-        assertThrows(IllegalArgumentException.class, () -> service.registrar("sessao", 0L));
+        assertThrows(IllegalArgumentException.class, () -> registrar(null, 1L));
+        assertThrows(IllegalArgumentException.class, () -> registrar(" ", 1L));
+        assertThrows(IllegalArgumentException.class, () -> registrar("sessao", null));
+        assertThrows(IllegalArgumentException.class, () -> registrar("sessao", 0L));
         assertThrows(ResponseStatusException.class, () -> service.consultar(null, 1L));
     }
 
@@ -42,7 +74,7 @@ class SessionServiceImplTest {
         try (var executor = Executors.newFixedThreadPool(8)) {
             var tarefas = IntStream.range(0, 100).<Callable<String>>mapToObj(i -> () -> {
                 var id = UUID.randomUUID().toString();
-                service.registrar(id, 1L);
+                registrar(id, 1L);
                 return id;
             }).toList();
             var resultados = executor.invokeAll(tarefas);

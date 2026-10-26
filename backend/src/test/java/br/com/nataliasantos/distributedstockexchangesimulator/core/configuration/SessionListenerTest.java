@@ -12,7 +12,7 @@ class SessionListenerTest {
     void destruicaoPorExpiracaoOuInvalidacaoRemoveRegistro() {
         var service = new SessionServiceImpl();
         var session = new MockHttpSession();
-        service.registrar(session.getId(), 1L);
+        service.registrar(session, 1L);
         var listener = new SessionConfiguration.SessionListener(service);
         listener.sessionDestroyed(new HttpSessionEvent(session));
         listener.sessionDestroyed(new HttpSessionEvent(session));

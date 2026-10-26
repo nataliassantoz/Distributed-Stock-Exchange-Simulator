@@ -1,0 +1,43 @@
+meta {
+  name: Listar investidores conectados
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/mercado/investidores
+  body: none
+  auth: none
+}
+
+tests {
+  test("Lista contem o investidor da sessao atual", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().cdRetorno).to.equal(200);
+    const investidores = res.getBody().dados;
+    expect(investidores).to.be.an("array").and.not.empty;
+    expect(investidores.some(investidor =>
+      investidor.idUsuario === bru.getVar("investidoresUsuarioId"))).to.equal(true);
+  });
+
+  test("Investidores unicos e ordenados com informacoes basicas", function () {
+    const investidores = res.getBody().dados;
+    const ids = investidores.map(investidor => investidor.idUsuario);
+    expect(new Set(ids).size).to.equal(ids.length);
+    expect(ids).to.deep.equal([...ids].sort((a, b) => a - b));
+    investidores.forEach(investidor => {
+      expect(investidor.idUsuario).to.be.a("number").and.above(0);
+      expect(investidor.nome).to.be.a("string").and.not.empty;
+      expect(investidor.quantidadeSessoes).to.be.a("number").and.at.least(1);
+      expect(Number.isInteger(investidor.quantidadeSessoes)).to.equal(true);
+      expect(investidor.dataHoraConexao).to.be.a("string").and.not.empty;
+      expect(Number.isNaN(Date.parse(investidor.dataHoraConexao))).to.equal(false);
+    });
+  });
+
+  test("Resposta nao expoe credenciais ou dados privados", function () {
+    res.getBody().dados.forEach(investidor => {
+      expect(investidor).to.have.all.keys("idUsuario", "nome", "dataHoraConexao", "quantidadeSessoes");
+    });
+  });
+}
