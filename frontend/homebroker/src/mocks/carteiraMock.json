@@ -1,0 +1,56 @@
+{
+  "saldo": {
+    "saldoCaixa": 25000.00,
+    "saldoReservado": 3500.00,
+    "saldoDisponivel": 21500.00
+  },
+  "carteira": {
+    "posicoes": [
+      {
+        "ativoId": 1,
+        "ticker": "PETR4",
+        "nome": "Petróleo Brasileiro S.A.",
+        "quantidade": 250,
+        "quantidadeReservada": 50,
+        "precoMedio": 36.80,
+        "precoAtual": 39.50
+      },
+      {
+        "ativoId": 2,
+        "ticker": "VALE3",
+        "nome": "Vale S.A.",
+        "quantidade": 180,
+        "quantidadeReservada": 0,
+        "precoMedio": 64.20,
+        "precoAtual": 68.90
+      },
+      {
+        "ativoId": 3,
+        "ticker": "ITUB4",
+        "nome": "Itaú Unibanco Holding S.A.",
+        "quantidade": 300,
+        "quantidadeReservada": 100,
+        "precoMedio": 31.50,
+        "precoAtual": 33.70
+      },
+      {
+        "ativoId": 4,
+        "ticker": "WEGE3",
+        "nome": "WEG S.A.",
+        "quantidade": 150,
+        "quantidadeReservada": 0,
+        "precoMedio": 48.00,
+        "precoAtual": 52.30
+      },
+      {
+        "ativoId": 5,
+        "ticker": "BBAS3",
+        "nome": "Banco do Brasil S.A.",
+        "quantidade": 200,
+        "quantidadeReservada": 40,
+        "precoMedio": 27.10,
+        "precoAtual": 28.45
+      }
+    ]
+  }
+}

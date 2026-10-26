@@ -65,7 +65,7 @@ const menuCards = [
     descricao: 'Gerencie seus ativos, saldo e acompanhe a evolução do seu portfólio.',
     icone: 'wallet',
     cor: 'teal',
-    rota: null,
+    rota: '/carteira',
   },
   {
     id: 'ordens',
