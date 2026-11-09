@@ -206,3 +206,82 @@ Erros de validação incluem `dados.erros`, com as mensagens por campo, sem repe
 valores enviados. Erros inesperados retornam 500 com mensagem genérica e são
 registrados nos logs do servidor. Falhas de autenticação e acesso nos filtros do
 Spring Security também usam o tratamento global.
+
+## Investidores conectados — SESSION-002
+
+`GET /mercado/investidores` exige autenticação pelo cookie `JSESSIONID`.
+Retorna `200` com um item por investidor que possui pelo menos uma sessão
+válida nesta instância, ordenado por `idUsuario`. Sem autenticação, retorna `401`.
+A rota segue o contrato da issue #16, sem o prefixo `/api`.
+
+```json
+{
+  "cdRetorno": 200,
+  "msgTecnica": null,
+  "msgUsuario": "Operação realizada com sucesso",
+  "dados": [
+    {
+      "idUsuario": 1,
+      "nome": "Maria Silva",
+      "dataHoraConexao": "2026-10-22T12:00:00Z",
+      "quantidadeSessoes": 2
+    }
+  ]
+}
+```
+
+`dataHoraConexao` representa a conexão mais antiga entre as sessões ainda válidas
+do investidor; `quantidadeSessoes` conta essas sessões. Identificadores de sessão,
+email, senha e dados financeiros não são expostos. Uma consulta sem participantes
+retorna `dados: []`.
+
+Somente logins bem-sucedidos entram no registro. Logout remove a sessão atual;
+o investidor permanece na lista enquanto outra sessão estiver válida. A consulta
+exclui sessões invalidadas ou cujo prazo de inatividade já venceu, mesmo antes da
+limpeza periódica do contêiner. Consultar a lista não renova a atividade dos demais
+participantes. Fechar o navegador ou perder a rede não encerra imediatamente uma
+sessão: conectado significa possuir uma sessão autenticada válida, sem heartbeat.
+As sessões continuam em memória; não há histórico nem agregação entre instâncias.
+
+### Validação
+
+1. Cadastre e autentique dois investidores em navegadores ou clientes com cookies separados.
+2. Consulte `/mercado/investidores`: os dois devem aparecer.
+3. Autentique o primeiro investidor em outro cliente: ele deve aparecer uma vez, com duas sessões.
+4. Faça logout de uma dessas sessões: o investidor deve continuar listado com uma sessão.
+5. Faça logout da outra: apenas o segundo investidor deve aparecer.
+6. Consulte sem autenticação: a resposta deve ser `401`.
+
+Execute `mvn test` em `backend/`. `InvestidoresTest` valida o endpoint, autenticação,
+agregação de sessões e logout; `SessionServiceImplTest` cobre exclusão de sessões
+expiradas, invalidadas e removidas, lista vazia e sessões sem timeout.
+
+## Registro de ordens — ORDER-001
+
+`POST /ordens` exige sessão autenticada e token CSRF. Envie:
+
+```json
+{"ativo": 1, "tipo": "COMPRA", "quantidade": 10, "preco": 12.50}
+```
+
+`ativo` é o ID de um ativo existente; `tipo` aceita `COMPRA` ou `VENDA`.
+Quantidade deve ser inteira e positiva. Preço deve ser positivo, com até 17
+algarismos inteiros e duas casas decimais. O servidor define investidor pela
+sessão, ID, status `PENDENTE` e `dataHora` em UTC. Retorna `201` com esses campos
+em `dados`, no envelope `ApiResult`. Dados inválidos retornam `400`, ativo
+inexistente `404`, ausência de autenticação com CSRF válido `401` e CSRF
+inválido/ausente `403`.
+
+Esta etapa registra solicitações: não valida disponibilidade nem reserva dinheiro
+ou ações, não executa matching e não altera carteira, saldo ou preço do ativo.
+`PENDENTE` indica uma solicitação persistida, não uma garantia de recursos para
+execução. Validação financeira e reservas precisam ser implementadas antes de
+habilitar o processamento de negociações. Quantidade original e restante são
+inicialmente iguais; a prioridade futura pode desempatar `criada_em` pelo `id`.
+Reenvios criam ordens independentes; não há chave de idempotência nesta etapa.
+
+Validação manual: autentique-se conforme o fluxo acima, obtenha CSRF novamente
+após o login e envie o JSON para `/ordens`. Repita com `VENDA`: ambas devem
+retornar IDs distintos e status `PENDENTE`. Consulte a tabela `ordem` para conferir
+a persistência. Quantidade zero, preço negativo e tipo inválido devem retornar
+`400` sem criar registros. Execute `./mvnw test` para os testes automatizados.
