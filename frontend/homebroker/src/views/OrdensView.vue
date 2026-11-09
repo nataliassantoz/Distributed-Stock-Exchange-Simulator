@@ -53,7 +53,7 @@ function validarTudo() {
 
 function onAtivoChange() {
   erros.value.ativo = ''
-  const ativo = ativos.value.find((a) => a.ticker === ativoSelecionado.value)
+  const ativo = ativos.value.find((a) => a.ticker === ativoSelecionado.value || a.codigo === ativoSelecionado.value)
   if (ativo) {
     preco.value = ativo.precoAtual
   }
@@ -65,16 +65,26 @@ async function enviarOrdem() {
 
   isSubmitting.value = true
   try {
+    const ativoObj = ativos.value.find((a) => a.ticker === ativoSelecionado.value || a.codigo === ativoSelecionado.value)
+    const ativoId = ativoObj?.id || 1
+
     const resultado = await ordemStore.enviarOrdem({
-      ativo: ativoSelecionado.value,
+      ativo: ativoId,
+      ticker: ativoSelecionado.value,
       tipo: tipo.value,
       quantidade: Number(quantidade.value),
       preco: Number(preco.value),
     })
     successData.value = resultado
     resetarFormulario()
-  } catch {
-    formError.value = 'Não foi possível enviar a ordem. Verifique sua conexão e tente novamente.'
+  } catch (err) {
+    const msg =
+      err?.response?.data?.msgUsuario ||
+      err?.response?.data?.msgTecnica ||
+      err?.response?.data?.message ||
+      ordemStore.error ||
+      'Não foi possível enviar a ordem. Verifique sua conexão e tente novamente.'
+    formError.value = msg
   } finally {
     isSubmitting.value = false
   }
@@ -189,8 +199,8 @@ onMounted(() => {
               <div class="detail-row">
                 <span class="detail-label">Ativo</span>
                 <span class="detail-value">
-                  <span class="detail-badge" :style="badgeStyle(successData.ativo)">
-                    {{ successData.ativo || '—' }}
+                  <span class="detail-badge" :style="badgeStyle(successData.ticker || successData.ativo)">
+                    {{ successData.ticker || successData.ativo || '—' }}
                   </span>
                 </span>
               </div>

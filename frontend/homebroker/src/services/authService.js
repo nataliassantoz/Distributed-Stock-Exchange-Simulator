@@ -11,7 +11,8 @@ const authService = {
       email: credentials.email.trim(),
       senha: credentials.senha,
     })
-    return response.data
+    invalidarCsrf()
+    return response.data?.dados ?? response.data
   },
 
   /**
@@ -27,7 +28,8 @@ const authService = {
       email: payload.email.trim(),
       senha: payload.senha,
     })
-    return response.data
+    invalidarCsrf()
+    return response.data?.dados ?? response.data
   },
 
   /**
@@ -36,7 +38,7 @@ const authService = {
    */
   async me() {
     const response = await api.get('/auth/me')
-    return response.data
+    return response.data?.dados ?? response.data
   },
 
   logout() {

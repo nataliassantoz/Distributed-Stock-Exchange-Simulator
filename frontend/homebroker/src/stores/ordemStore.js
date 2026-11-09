@@ -17,8 +17,7 @@ export const useOrdemStore = defineStore('ordem', () => {
     error.value = null
     try {
       const data = await ordemService.listarAtivos()
-      const resultado = data?.resultado || data?.data || data
-      ativos.value = Array.isArray(resultado) ? resultado : []
+      ativos.value = Array.isArray(data) ? data : []
     } catch (err) {
       error.value = 'Não foi possível carregar os ativos disponíveis.'
       console.error('[OrdemStore] Erro ao carregar ativos:', err?.message)
@@ -29,19 +28,23 @@ export const useOrdemStore = defineStore('ordem', () => {
 
   /**
    * Envia uma ordem de compra ou venda.
-   * @param {{ ativo: string, tipo: 'COMPRA'|'VENDA', quantidade: number, preco: number }} payload
+   * @param {{ ativo: number|string, ticker?: string, tipo: 'COMPRA'|'VENDA', quantidade: number, preco: number }} payload
    */
   async function enviarOrdem(payload) {
     loading.value = true
     error.value = null
     ultimaOrdem.value = null
     try {
-      const data = await ordemService.enviarOrdem(payload)
-      const resultado = data?.resultado || data?.data || data
+      const resultado = await ordemService.enviarOrdem(payload)
       ultimaOrdem.value = resultado
       return resultado
     } catch (err) {
-      error.value = 'Não foi possível enviar a ordem. Tente novamente.'
+      const msg =
+        err.response?.data?.msgUsuario ||
+        err.response?.data?.msgTecnica ||
+        err.response?.data?.message ||
+        'Não foi possível enviar a ordem. Tente novamente.'
+      error.value = msg
       console.error('[OrdemStore] Erro ao enviar ordem:', err?.message)
       throw err
     } finally {

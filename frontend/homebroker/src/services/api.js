@@ -16,9 +16,10 @@ export async function carregarCsrf() {
   if (csrfCache) return csrfCache
   try {
     const { data } = await api.get('/auth/csrf')
+    const csrfData = data?.dados || data
     csrfCache = {
-      headerName: data.headerName || 'X-CSRF-TOKEN',
-      token: data.token,
+      headerName: csrfData?.headerName || 'X-CSRF-TOKEN',
+      token: csrfData?.token,
     }
     return csrfCache
   } catch (err) {

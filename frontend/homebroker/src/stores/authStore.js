@@ -57,10 +57,11 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function _persistSession(data) {
-    token.value = data.idSessao || 'authenticated'
-    usuario.value = data.usuario
+    const session = data?.dados ?? data
+    token.value = session?.idSessao || 'authenticated'
+    usuario.value = session?.usuario || session
     localStorage.setItem('hb_token', token.value)
-    localStorage.setItem('hb_usuario', JSON.stringify(data.usuario))
+    localStorage.setItem('hb_usuario', JSON.stringify(usuario.value))
   }
 
   function _clearSession() {
@@ -74,6 +75,8 @@ export const useAuthStore = defineStore('auth', () => {
     if (!err.response?.data) return fallback
 
     const data = err.response.data
+    if (data.msgUsuario) return data.msgUsuario
+    if (data.msgTecnica) return data.msgTecnica
     if (data.detail) return data.detail
 
     if (data.erros && typeof data.erros === 'object') {
