@@ -1,0 +1,17 @@
+{
+  "ativos": [
+    { "id": 1, "ticker": "PETR4", "nome": "Petróleo Brasileiro S.A.", "precoAtual": 39.50 },
+    { "id": 2, "ticker": "VALE3", "nome": "Vale S.A.", "precoAtual": 68.90 },
+    { "id": 3, "ticker": "ITUB4", "nome": "Itaú Unibanco Holding S.A.", "precoAtual": 33.70 },
+    { "id": 4, "ticker": "WEGE3", "nome": "WEG S.A.", "precoAtual": 52.30 },
+    { "id": 5, "ticker": "BBAS3", "nome": "Banco do Brasil S.A.", "precoAtual": 28.45 },
+    { "id": 6, "ticker": "TEC3",  "nome": "TechNova S.A.", "precoAtual": 50.00 },
+    { "id": 7, "ticker": "ENE3",  "nome": "EnergiaSul S.A.", "precoAtual": 80.00 },
+    { "id": 8, "ticker": "FIN3",  "nome": "FinanCorp S.A.", "precoAtual": 30.00 }
+  ],
+  "ordemEnviada": {
+    "id": "ORD-20241026-001",
+    "status": "PENDENTE",
+    "mensagem": "Ordem registrada com sucesso e aguardando execução pelo Matching Engine."
+  }
+}

@@ -73,7 +73,7 @@ const menuCards = [
     descricao: 'Envie ordens de compra e venda definindo o ativo, preço e quantidade.',
     icone: 'arrows',
     cor: 'cyan',
-    rota: null,
+    rota: '/ordens',
   },
   {
     id: 'book',

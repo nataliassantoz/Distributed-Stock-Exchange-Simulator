@@ -38,6 +38,12 @@ const routes = [
     component: () => import('@/views/CarteiraView.vue'),
     meta: { title: 'Minha Carteira — Home Broker', requiresAuth: true },
   },
+  {
+    path: '/ordens',
+    name: 'ordens',
+    component: () => import('@/views/OrdensView.vue'),
+    meta: { title: 'Enviar Ordem — Home Broker', requiresAuth: true },
+  },
 ]
 
 const router = createRouter({
